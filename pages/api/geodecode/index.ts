@@ -17,6 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const baseURL = 'https://maps.googleapis.com/maps/api/geocode/json?';
     if (!latlng) {
       res.status(400).json({ error: 'Missing latlng parameter' });
+      return;
     }
     const params = new URLSearchParams({
       latlng: latlng as string,
@@ -29,10 +30,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
       const addressData = await addressRes.json();
       res.json(addressData);
+      return;
     } catch (error) {
       console.error(error);
     }
-  } else {
-    res.status(404).json({ error: 'Resource not found' });
   }
+  res.status(404).json({ error: 'Resource not found' });
 }

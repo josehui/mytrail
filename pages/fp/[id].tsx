@@ -3,7 +3,7 @@ import { GetStaticProps } from 'next';
 import Layout from '../../components/Layout';
 import prisma from '../../lib/prisma';
 import NotFoundPage from '../404';
-import Trail from '../../components/Trail/TrailOverview';
+import FootPrintDetail, { FootPrintDetailProps } from '../../components/Trail/FootPrintDetail';
 
 export async function getStaticPaths() {
   // Defer SSG since links are created by user after deploy
@@ -13,37 +13,35 @@ export async function getStaticPaths() {
   };
 }
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const authorLink = await prisma.link.findUnique({
+  let footprint = await prisma.footprint.findUnique({
     where: { id: params?.id?.toString() },
     include: {
-      user: true,
+      author: {
+        select: { name: true, email: true },
+      },
     },
   });
-  if (!authorLink) {
-    return {
-      props: {},
-      revalidate: 10,
-    };
-  }
+  footprint = JSON.parse(JSON.stringify(footprint));
   return {
-    props: { linkId: authorLink.id, authorName: authorLink.user.name },
+    props: { footprint },
     revalidate: 10,
   };
 };
 
-type ShareProps = {
-  linkId?: string;
-  authorName?: string;
+type FootPrintPageProps = {
+  footprint?: FootPrintDetailProps;
 };
-const SharePage: React.FC<ShareProps> = (props) => {
-  if (!props.linkId) {
+
+const FootPrintPage: React.FC<FootPrintPageProps> = (props) => {
+  if (!props.footprint) {
     return <NotFoundPage />;
   }
   return (
     <Layout>
-      <Trail {...props} />
+      {/* <div>Found! {props.footprint.address} </div> */}
+      <FootPrintDetail {...props.footprint} />
     </Layout>
   );
 };
 
-export default SharePage;
+export default FootPrintPage;

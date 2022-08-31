@@ -4,7 +4,7 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import { Center, Title, Text } from '@mantine/core';
 import Layout from '../components/Layout';
-import Trail from '../components/TrailOverview';
+import Trail from '../components/Trail/TrailOverview';
 
 const MyTrail: React.FC = () => {
   const { data: session, status } = useSession();

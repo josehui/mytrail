@@ -9,7 +9,6 @@ import {
   CloseButton,
 } from '@mantine/core';
 import { useState } from 'react';
-import { IconMinus } from '@tabler/icons';
 import useSWR, { Fetcher, useSWRConfig } from 'swr';
 
 type linkProps = {

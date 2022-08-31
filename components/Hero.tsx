@@ -1,4 +1,6 @@
 import { createStyles, Title, Text, Button, Container } from '@mantine/core';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { Dots } from './Dots';
 
 const useStyles = createStyles((theme) => ({
@@ -89,6 +91,7 @@ const useStyles = createStyles((theme) => ({
 
 const HeroSection = () => {
   const { classes } = useStyles();
+  const { data: session, status } = useSession();
 
   return (
     <Container className={classes.wrapper} size={1400}>
@@ -113,14 +116,27 @@ const HeroSection = () => {
           </Text>
         </Container>
 
-        <div className={classes.controls}>
-          <Button className={classes.control} size="lg" variant="default" color="gray">
-            Book a demo
-          </Button>
-          <Button className={classes.control} size="lg">
-            Purchase a license
-          </Button>
-        </div>
+        {!session && status !== 'loading' && (
+          <div className={classes.controls}>
+            {/* <Button className={classes.control} size="lg" variant="default" color="gray">
+              View demo
+            </Button> */}
+            <Link href="/api/auth/signin" passHref>
+              <Button radius="xl" className={classes.control} size="lg">
+                Sign up
+              </Button>
+            </Link>
+          </div>
+        )}
+        {session && (
+          <div className={classes.controls}>
+            <Link href="/mytrail" passHref>
+              <Button component="a" radius="xl" className={classes.control} size="lg">
+                View your Trail
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
     </Container>
   );

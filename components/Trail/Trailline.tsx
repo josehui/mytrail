@@ -9,8 +9,8 @@ export type TraillineProps = {
   footprints: FootPrintCardProps[];
 };
 
-const TitleAsLink = ({ title }: { title: string }) => (
-  <Link href="" passHref>
+const TitleAsLink = ({ title, id }: { title: string; id: string }) => (
+  <Link href={`/fp/${id}`} passHref>
     <Text variant="link" component="a">
       {title}
     </Text>
@@ -35,7 +35,7 @@ const Trailine: React.FC<TraillineProps> = (props) => {
               return (
                 <Timeline.Item
                   key={fp.id}
-                  title={<TitleAsLink title={fp.address} />}
+                  title={<TitleAsLink title={fp.address} id={fp.id} />}
                   bullet={<IconCalendar size={12} />}
                   id={idx.toString()}
                 >

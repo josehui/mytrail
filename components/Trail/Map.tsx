@@ -49,15 +49,23 @@ const Map = (props: mapProps) => {
   const { classes } = useStyles();
 
   const setBound = (map: google.maps.Map) => {
-    const bounds = new window.google.maps.LatLngBounds();
-    for (let i = 0; i < footprints.length; i += 1) {
-      const pos = {
-        lat: footprints[i].location.lat,
-        lng: footprints[i].location.lng,
-      };
-      bounds.extend(pos);
+    if (footprints.length > 1) {
+      const bounds = new window.google.maps.LatLngBounds();
+      for (let i = 0; i < footprints.length; i += 1) {
+        const pos = {
+          lat: footprints[i].location.lat,
+          lng: footprints[i].location.lng,
+        };
+        bounds.extend(pos);
+      }
+      map.fitBounds(bounds);
+    } else {
+      map.setCenter({
+        lat: footprints[0].location.lat,
+        lng: footprints[0].location.lng,
+      });
+      map.setZoom(12);
     }
-    map.fitBounds(bounds);
   };
   const onMapLoad = (map: google.maps.Map) => {
     setMapRef(map);
@@ -73,7 +81,7 @@ const Map = (props: mapProps) => {
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
-          zoom={10}
+          zoom={12}
           options={mapOptions}
           onLoad={onMapLoad}
         >

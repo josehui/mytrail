@@ -33,5 +33,16 @@ module.exports = {
         enforceForRenamedProperties: false,
       },
     ],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
+    'import/no-named-as-default': 0,
   },
 };

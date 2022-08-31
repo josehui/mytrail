@@ -12,21 +12,26 @@ const PhotoCarousel = ({
 }) => (
   <Carousel
     withIndicators
-    slideSize="100%"
+    // slideSize="100%"
     slideGap="md"
     align="start"
     sx={{ maxHeight: '70vh' }}
     loop
     getEmblaApi={setEmbla}
+    breakpoints={[
+      { maxWidth: 'md', slideSize: '50%' },
+      { maxWidth: 'sm', slideSize: '100%', slideGap: 0 },
+    ]}
   >
     {images.map((photo, idx) => (
       <Carousel.Slide>
         <Image
           key={idx}
           src={photo}
+          height={500}
           fit="contain"
-          radius="xs"
-          // sx={{ maxWidth: '20%', width: 'auto', height: 'auto', maxHeight: '8rem' }}
+          // radius="xs"
+          sx={{ maxHeight: '80%', maxWidth: '100%' }}
         />
       </Carousel.Slide>
     ))}

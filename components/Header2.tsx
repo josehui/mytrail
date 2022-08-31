@@ -18,6 +18,7 @@ import {
   IconShare,
   IconSwitchHorizontal,
   IconChevronDown,
+  IconGps,
 } from '@tabler/icons';
 import { ColorSchemeToggle } from './ColorSchemeToggle/ColorSchemeToggle';
 import ShareForm from './ShareForm';
@@ -109,6 +110,7 @@ const UserMenu = ({ user }: UserProps) => {
         opened={openShareForm}
         onClose={() => setOpenShareForm(false)}
         title="Share your trail"
+        centered
       >
         <ShareForm />
       </Modal>
@@ -125,8 +127,13 @@ const UserMenu = ({ user }: UserProps) => {
       </Menu.Target>
       <Menu.Dropdown>
         <Menu.Label>EmailL: {user?.email}</Menu.Label>
+        <Link href="/mytrail" passHref>
+          <Menu.Item icon={<IconGps size={14} color={theme.colors.blue[6]} stroke={1.5} />}>
+            My trail
+          </Menu.Item>
+        </Link>
         <Menu.Item
-          icon={<IconShare size={14} color={theme.colors.blue[6]} stroke={1.5} />}
+          icon={<IconShare size={14} color={theme.colors.green[7]} stroke={1.5} />}
           onClick={() => setOpenShareForm(true)}
         >
           Share my trail
@@ -152,7 +159,7 @@ export default function HeaderTabs() {
     <div className={classes.header}>
       <Container size="xl" className={classes.mainSection}>
         <Group position="apart">
-          <Link href="/mytrail" passHref>
+          <Link href="/" passHref>
             <Text component="a" weight={800} size="md" sx={{ lineHeight: 1 }} mr={3}>
               MyTrail
             </Text>

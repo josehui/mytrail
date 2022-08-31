@@ -38,7 +38,7 @@ export interface FootPrintCardProps {
 }
 
 export default function FootPrintCard(props: FootPrintCardProps) {
-  const { location, address, remarks, createdAt, images } = props;
+  const { location, address, remarks, createdAt, images, id } = props;
   const [openGallery, setOpenGallery] = useState(false);
   const TRANSITION_DURATION = 200;
   const [embla, setEmbla] = useState<EmblaCarouselType | null>(null);
@@ -69,7 +69,7 @@ export default function FootPrintCard(props: FootPrintCardProps) {
       </Card.Section>
 
       <Group position="apart" mt="xl">
-        <Link href="" passHref>
+        <Link href={`/fp/${id}`} passHref>
           <Text variant="link" component="a" weight={500}>
             {/* Ficus Garden, 11 Lok King St, Fo Tan, Hong Kong */}
             {address}

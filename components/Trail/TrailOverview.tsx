@@ -22,19 +22,11 @@ const Trail: React.FC<TrailProps> = (props) => {
   const { linkId, authorName } = props;
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [TargetDate, setTargetDate] = useState<Date>();
-  useEffect(() => {
-    if (!router.isReady) return;
-    const dateFromPath = router.query.date ? new Date(router.query.date as string) : new Date();
-    dateFromPath.setHours(0, 0, 0, 0);
-    setTargetDate(dateFromPath);
-  }, [router.isReady, router.query]);
-
-  const UTCDate = TargetDate?.toISOString();
+  const [targetDate, setTargetDate] = useState<Date>();
+  const UTCDate = targetDate?.toISOString();
   const queryParams = `?date=${UTCDate}&id=${linkId}`;
-  const { data: footprints } = useSWR(TargetDate ? ['/api/footprint', queryParams] : null, fetcher);
+  const { data: footprints } = useSWR(targetDate ? ['/api/footprint', queryParams] : null, fetcher);
   const footprintCount = footprints?.length ? footprints.length : 0;
-
   const [openForm, setOpenForm] = useState<boolean>(false);
   const setDateParam = (d: Date) => {
     setTargetDate(d);
@@ -43,6 +35,13 @@ const Trail: React.FC<TrailProps> = (props) => {
     router.query.date = localISOTime;
     router.push(router);
   };
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    const dateFromPath = router.query.date ? new Date(router.query.date as string) : new Date();
+    dateFromPath.setHours(0, 0, 0, 0);
+    setTargetDate(dateFromPath);
+  }, [router.isReady, router.query]);
 
   return (
     <>
@@ -75,9 +74,15 @@ const Trail: React.FC<TrailProps> = (props) => {
             required
             size="xs"
             px={0}
-            value={TargetDate}
+            value={targetDate}
             onChange={setDateParam}
             clearable={false}
+            dayStyle={(date) =>
+              date.toDateString() === new Date().toDateString() &&
+              date.toDateString() !== targetDate?.toDateString()
+                ? { color: '#228be6' }
+                : {}
+            }
           />
         </Group>
         {!footprints?.length && (
