@@ -60,7 +60,7 @@ export default function FootPrintCard(props: FootPrintCardProps) {
     ));
   const { classes } = useStyles();
   // eslint-disable-next-line newline-per-chained-call
-  const localDate = new Date(createdAt).toString().split(' ').slice(4, 6).join(' ');
+  const localDate = new Date(createdAt).toLocaleTimeString('sv', { timeZoneName: 'longOffset' });
 
   return (
     <Card withBorder p="lg" className={classes.card}>

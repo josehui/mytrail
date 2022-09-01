@@ -24,27 +24,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  if (session && req.method === 'POST') {
-    const { location, address, remarks, images } = req.body;
-    const result = await prisma.footprint.create({
-      data: {
-        location: JSON.parse(location),
-        address,
-        remarks,
-        images,
-        author: { connect: { email: session?.user?.email! } },
-      },
-    });
-    res.json(result);
-    return;
-  }
-
   if (req.method === 'GET') {
     const authorEmail = linkAuthor?.email ? linkAuthor?.email : session?.user?.email;
     const startD = req.query.date ? new Date(req.query.date.toString()) : new Date();
-    startD.setHours(0, 0, 0, 0);
+    if (!req.query.date) {
+      startD.setHours(0, 0, 0, 0);
+    }
     const endD = new Date(startD.getTime());
     endD.setDate(endD.getDate() + 1);
+    console.log(startD.toISOString());
     let footprints = await prisma.footprint.findMany({
       orderBy: [
         {
@@ -66,6 +54,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     footprints = JSON.parse(JSON.stringify(footprints));
     res.json(footprints);
+    return;
+  }
+
+  if (session && req.method === 'POST') {
+    const { location, address, remarks, images, timestamp } = req.body;
+    const result = await prisma.footprint.create({
+      data: {
+        location: JSON.parse(location),
+        address,
+        remarks,
+        images,
+        author: { connect: { email: session?.user?.email! } },
+        createdAt: timestamp ? new Date(timestamp) : undefined,
+      },
+    });
+    res.json(result);
     return;
   }
   res.status(404).send({ error: 'Resource not found' });

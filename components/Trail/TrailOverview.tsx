@@ -10,6 +10,7 @@ import Trailline from './Trailline';
 import { FootPrintCardProps } from './FootPrintCard';
 import FootPrintForm from './FootPrintForm';
 import Map from './Map';
+import { UTCToLocal, LocalToUTC } from '../../lib/timeUtil';
 
 const fetcher: Fetcher<FootPrintCardProps[], string> = (id, params = '') =>
   fetch(`${id}${params}`).then((res) => res.json());
@@ -28,17 +29,18 @@ const Trail: React.FC<TrailProps> = (props) => {
   const { data: footprints } = useSWR(targetDate ? ['/api/footprint', queryParams] : null, fetcher);
   const footprintCount = footprints?.length ? footprints.length : 0;
   const [openForm, setOpenForm] = useState<boolean>(false);
-  const setDateParam = (d: Date) => {
-    setTargetDate(d);
-    const tzOffset = d.getTimezoneOffset() * 60000;
-    const localISOTime = new Date(d.getTime() - tzOffset).toISOString().slice(0, 10);
-    router.query.date = localISOTime;
+  const setDateParam = (date: Date) => {
+    const localISOTime = UTCToLocal(date);
+    const localISOTimeString = localISOTime.toISOString().slice(0, 10);
+    router.query.date = localISOTimeString;
     router.push(router);
   };
 
   useEffect(() => {
     if (!router.isReady) return;
-    const dateFromPath = router.query.date ? new Date(router.query.date as string) : new Date();
+    const dateFromPath = router.query.date
+      ? LocalToUTC(new Date(router.query.date as string))
+      : new Date();
     dateFromPath.setHours(0, 0, 0, 0);
     setTargetDate(dateFromPath);
   }, [router.isReady, router.query]);

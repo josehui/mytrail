@@ -13,7 +13,14 @@ import {
 } from '@mantine/core';
 import { useSWRConfig } from 'swr';
 import { useForm } from '@mantine/form';
-import { IconUpload, IconX, IconCameraPlus } from '@tabler/icons';
+import {
+  IconUpload,
+  IconX,
+  IconCameraPlus,
+  IconClock,
+  IconMapPin,
+  IconMapSearch,
+} from '@tabler/icons';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
 
 interface ImageProps {
@@ -26,6 +33,7 @@ interface FormDataProps {
   address: string;
   remarks: string;
   images?: Array<string>;
+  timestamp: string;
 }
 
 interface FormProps {
@@ -110,7 +118,7 @@ const FootPrintForm = (props: FormProps) => {
       location: '',
       address: '',
       remarks: 'I am fine, thanks',
-      timestamp: '',
+      timestamp: new Date().toISOString(),
       images: [],
     },
 
@@ -136,6 +144,7 @@ const FootPrintForm = (props: FormProps) => {
           );
           setLoadingLocation(false);
           setCurrentLocation(position);
+          setLocationEditable(true);
         },
         () => {
           form.setFieldValue('location', 'Unable to retrieve your location');
@@ -169,11 +178,6 @@ const FootPrintForm = (props: FormProps) => {
     }
   }, [currentLocation]);
 
-  useEffect(() => {
-    const currentTime = new Date();
-    form.setFieldValue('timestamp', currentTime.toUTCString());
-  }, []);
-
   const submitData = async (formData: FormDataProps) => {
     const filesFormData = new FormData();
     images?.forEach((file, idx) => filesFormData.append(idx.toString(), file));
@@ -191,6 +195,8 @@ const FootPrintForm = (props: FormProps) => {
       }
     }
     try {
+      // eslint-disable-next-line no-param-reassign
+      formData.timestamp = new Date(formData.timestamp).toISOString();
       const body = formData;
       await fetch('/api/footprint', {
         method: 'POST',
@@ -209,7 +215,6 @@ const FootPrintForm = (props: FormProps) => {
         onSubmit={form.onSubmit((values: FormDataProps) => {
           setOpenForm(false);
           submitData(values);
-          console.log(values);
         })}
       >
         {loadingLocation && (
@@ -222,7 +227,9 @@ const FootPrintForm = (props: FormProps) => {
           required
           disabled={!isLocationEditable}
           label="Location"
+          description='Format: {"lat":37.386052,"lng":-122.083851}'
           validationError="Invalid location data"
+          icon={<IconMapPin size={16} />}
           {...form.getInputProps('location')}
         />
         <TextInput
@@ -231,14 +238,17 @@ const FootPrintForm = (props: FormProps) => {
           disabled={!isLocationEditable}
           label="Address"
           placeholder=""
+          icon={<IconMapSearch size={16} />}
           {...form.getInputProps('address')}
         />
         <TextInput
           mt="md"
           required
-          disabled
+          // disabled
           label="Timestamp"
+          description="Use UTC timezone"
           placeholder=""
+          icon={<IconClock size={16} />}
           {...form.getInputProps('timestamp')}
         />
         <Textarea

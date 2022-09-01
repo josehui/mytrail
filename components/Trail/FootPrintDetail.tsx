@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable @next/next/no-img-element */
+import { useState, useEffect } from 'react';
 import {
   Text,
   Center,
@@ -10,9 +11,9 @@ import {
   Image,
   Modal,
 } from '@mantine/core';
-import NextImage from 'next/image';
 import Map from './Map';
 import { FootPrintCardProps } from './FootPrintCard';
+import { time } from 'console';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
@@ -57,14 +58,16 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
   const [openPhotos, setOpenPhotos] = useState(false);
   const [openFullPhoto, setOpenFullPhoto] = useState(false);
   const [fullPhoto, setFullPhoto] = useState<string | undefined>();
+  const [timestamp, setTimestamp] = useState<Date | undefined>();
+
+  // Calculate local time on client side
+  useEffect(() => setTimestamp(new Date(createdAt)), []);
 
   return (
     <Grid mx={10}>
       <Grid.Col sm={12} md={6}>
         <Container size={700} className={classes.wrapper}>
-          <Text className={classes.supTitle}>
-            Footprint on {new Date(createdAt).toDateString()}
-          </Text>
+          <Text className={classes.supTitle}>Footprint on {timestamp?.toDateString()}</Text>
           <Container size={660} p={0}>
             <Text color="dimmed" className={classes.description}>
               by {author?.name || author?.email || 'unknown'}
@@ -84,7 +87,7 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
               </tr>
               <tr>
                 <th>Timestamp:</th>
-                <td>{new Date(createdAt).toString()}</td>
+                <td>{timestamp?.toString()}</td>
               </tr>
               <tr>
                 <th>Remarks:</th>
@@ -105,7 +108,7 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
             transitionDuration={TRANSITION_DURATION}
             sx={{ zIndex: 1001 }}
           >
-            <Grid grow>
+            <Grid>
               {images.map((image, idx) => (
                 <Grid.Col sm={12} md={6} lg={4}>
                   <Image
@@ -130,7 +133,11 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
                 sx={{ zIndex: 1001 }}
               >
                 <Center>
-                  <img src={fullPhoto} style={{ maxHeight: '80vh', maxWidth: '100%' }} />
+                  <img
+                    src={fullPhoto}
+                    style={{ maxHeight: '80vh', maxWidth: '100%' }}
+                    alt="Full preview"
+                  />
                 </Center>
               </Modal>
             </Grid>

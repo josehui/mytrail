@@ -6,7 +6,7 @@ const FootPrintNote = (props: FootPrintCardProps) => {
   const { location, remarks, createdAt } = props;
   // const localDateTime = new Date();
   // eslint-disable-next-line newline-per-chained-call
-  const localDate = new Date(createdAt).toString().split(' ').slice(4, 6).join(' ');
+  const localDate = new Date(createdAt).toLocaleTimeString('sv', { timeZoneName: 'longOffset' });
   return (
     <>
       <Text size="sm" color="dimmed">
