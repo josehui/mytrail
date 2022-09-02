@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useForm } from '@mantine/form';
-import { TextInput, Button, Group, Textarea, NumberInput } from '@mantine/core';
+import { TextInput, Button, Group, Textarea, NumberInput, Modal } from '@mantine/core';
 import { randomId } from '@mantine/hooks';
+import NotificationSetting from './NotificationSetting';
 
 const AccountSettings = () => {
   const form = useForm({
@@ -11,6 +13,7 @@ const AccountSettings = () => {
       SOStime: 24,
     },
   });
+  const [openNotificationSetting, setOpenNotificationSetting] = useState<boolean>(false);
 
   return (
     <div style={{ maxWidth: 320, margin: 'auto' }}>
@@ -24,6 +27,19 @@ const AccountSettings = () => {
         required
         {...form.getInputProps('frequency')}
       />
+      <Modal
+        centered
+        opened={openNotificationSetting}
+        onClose={() => {
+          setOpenNotificationSetting(false);
+        }}
+        title="Notification Setting"
+      >
+        <NotificationSetting />
+      </Modal>
+      <Button mt="md" variant="light" onClick={() => setOpenNotificationSetting(true)}>
+        Notification Setting
+      </Button>
       <NumberInput
         label="Time before SOS"
         description="From 12 to 120 hours. A SOS message will be sent if no new footprint recevied for the configured time"

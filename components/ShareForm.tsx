@@ -98,8 +98,8 @@ export default function ShareForm() {
         component="a"
         sx={{ height: 30 }}
         mb={30}
-        variant="gradient"
-        gradient={{ from: 'teal', to: 'blue', deg: 60 }}
+        variant="light"
+        // gradient={{ from: 'teal', to: 'blue', deg: 60 }}
         onClick={() => {
           if (!generated) {
             genLink();

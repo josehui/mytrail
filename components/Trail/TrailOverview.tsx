@@ -28,7 +28,8 @@ const Trail: React.FC<TrailProps> = (props) => {
   const queryParams = `?date=${UTCDate}&id=${linkId}`;
   const { data: footprints } = useSWR(targetDate ? ['/api/footprint', queryParams] : null, fetcher);
   const footprintCount = footprints?.length ? footprints.length : 0;
-  const [openForm, setOpenForm] = useState<boolean>(false);
+  const [openForm, setOpenForm] = useState<boolean>(router.query.fp === 'true');
+
   const setDateParam = (date: Date) => {
     const localISOTime = UTCToLocal(date);
     const localISOTimeString = localISOTime.toISOString().slice(0, 10);
@@ -51,7 +52,10 @@ const Trail: React.FC<TrailProps> = (props) => {
         <Modal
           centered
           opened={openForm}
-          onClose={() => setOpenForm(false)}
+          onClose={() => {
+            setOpenForm(false);
+            router.replace('/mytrail', undefined, { shallow: true });
+          }}
           title="Add a footprint"
         >
           {' '}

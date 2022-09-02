@@ -5,8 +5,8 @@
   self.addEventListener('push', function (event) {
     const data = JSON.parse(event.data.text());
     event.waitUntil(
-      registration.showNotification('hhss', {
-        body: 'worker22',
+      registration.showNotification(data.title, {
+        body: data.body,
         icon: '/icons/android-chrome-192x192.png',
         vibrate: [200, 100, 200, 100, 200, 100, 200],
         actions: [
