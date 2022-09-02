@@ -77,7 +77,7 @@ model User {
   sessions      Session[]
   footprints    Footprint[]
   links         Link[]
-  setting       UserSetting?
+  setting       UserSettings?
 }
 
 model VerificationToken {
@@ -96,12 +96,12 @@ model Link {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model UserSetting {
+model UserSettings {
   id          String   @id @default(cuid())
-  reminderFreq Int
-  sosTime      Int
-  emailList    String[]
-  emailMessage String
+  reminderFreq Int      @default(180)
+  sosTime      Int      @default(24)
+  emailList    String[] @default([])
+  emailMessage String?
   defaultMessage String?
   userId       String   @map("user_id") @unique
   user         User     @relation(fields: [userId], references: [id])
@@ -111,4 +111,5 @@ model PushSubscription {
   id          String   @id @default(cuid())
   endpoint    String
   expirationTime DateTime?
+  keys        Json
 }

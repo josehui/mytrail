@@ -32,7 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const endD = new Date(startD.getTime());
     endD.setDate(endD.getDate() + 1);
-    console.log(startD.toISOString());
     let footprints = await prisma.footprint.findMany({
       orderBy: [
         {

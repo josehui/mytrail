@@ -1,6 +1,6 @@
 import { BlobServiceClient, ContainerClient } from '@azure/storage-blob';
 
-const containerName = 'tutorial-container';
+const containerName = process.env.AZURE_STORAGECONTAINERNAME!;
 const sasToken = process.env.AZURE_STORAGESASTOKEN;
 const storageAccountName = process.env.AZURE_STORAGERESOURCENAME;
 // </snippet_package>

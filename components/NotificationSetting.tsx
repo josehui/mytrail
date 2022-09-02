@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, useEffect } from 'react';
-import { Title, Text, Switch, Button, Chip, Loader, Group } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+import { Title, Text, Switch, Chip, Loader, Group } from '@mantine/core';
 import Link from 'next/link';
 import { base64ToUint8Array } from '../lib/buffer';
 
@@ -36,16 +37,37 @@ const NotificationSetting = () => {
     const subscribe = event.currentTarget.checked;
     if (subscribe) {
       setIsSubscribing(true);
-      const sub = await registration?.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: base64ToUint8Array(process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY!),
-      });
-      // TODO: you should call your API to save subscription data on server in order to send web push notification from server
-      setSubscription(sub);
-      setIsSubscribed(true);
+      try {
+        const sub = await registration?.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: base64ToUint8Array(process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY!),
+        });
+        // TODO: you should call your API to save subscription data on server in order to send web push notification from server
+        setSubscription(sub);
+        showNotification({
+          id: 'subscribe-success',
+          autoClose: 5000,
+          title: 'Subscribed',
+          message: 'You will receive reminder notifications',
+          color: 'green',
+          loading: false,
+        });
+        setIsSubscribed(true);
+        console.log('web push subscribed!');
+        console.log(sub);
+      } catch (error) {
+        showNotification({
+          id: 'subscribe-error',
+          autoClose: 5000,
+          title: 'Cannot create subscription',
+          message: 'Please check permission for Notifications',
+          color: 'red',
+          loading: false,
+        });
+        console.error(error);
+      }
       setIsSubscribing(false);
-      console.log('web push subscribed!');
-      console.log(sub);
+
       return;
     }
     if (!subscribe) {
@@ -53,17 +75,32 @@ const NotificationSetting = () => {
       // TODO: you should call your API to delete or invalidate subscription data on server
       setSubscription(null);
       setIsSubscribed(false);
-      console.log('web push unsubscribed!');
+      showNotification({
+        id: 'unsubscribe-success',
+        autoClose: 5000,
+        title: 'Unsubscribed',
+        message: 'You will no longer receive notifications',
+        color: 'blue',
+        loading: false,
+      });
     }
   };
 
   const handleTestNotification = async () => {
     if (!subscription) {
-      console.error('web push not subscribed');
+      showNotification({
+        id: 'test-fail',
+        autoClose: 5000,
+        title: 'Failed to test notification',
+        message: 'You are not subscribed to notifications',
+        color: 'red',
+        loading: false,
+      });
       return;
     }
     if (!isTested) {
       console.log({ subscription });
+      setIsTesting(true);
       await fetch('/api/notification-check', {
         method: 'POST',
         headers: {
@@ -74,6 +111,7 @@ const NotificationSetting = () => {
         }),
       });
       setIsTested(true);
+      setIsTesting(false);
     }
   };
 
@@ -92,7 +130,7 @@ const NotificationSetting = () => {
           mt="md"
           checked={isSubscribed}
           onChange={handleSubscription}
-          label="Subscribe to notification"
+          label="Subscribe to notifications"
         />
         {isSubscribing && <Loader mt={17} size={20} />}
       </Group>

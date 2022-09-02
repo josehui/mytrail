@@ -4,7 +4,7 @@ import { TextInput, Button, Group, Textarea, NumberInput, Modal } from '@mantine
 import { randomId } from '@mantine/hooks';
 import NotificationSetting from './NotificationSetting';
 
-const AccountSettings = () => {
+const UserSettings = () => {
   const form = useForm({
     initialValues: {
       email: '',
@@ -13,7 +13,7 @@ const AccountSettings = () => {
       SOStime: 24,
     },
   });
-  const [openNotificationSetting, setOpenNotificationSetting] = useState<boolean>(false);
+  const [openNotificationSetting, setOpenNotificationSetting] = useState<boolean>(true);
 
   return (
     <div style={{ maxWidth: 320, margin: 'auto' }}>
@@ -87,4 +87,4 @@ const AccountSettings = () => {
   );
 };
 
-export default AccountSettings;
+export default UserSettings;

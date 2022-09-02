@@ -1,11 +1,27 @@
 // pages/api/auth/[...nextauth].ts
 
 import { NextApiHandler } from 'next';
-import NextAuth from 'next-auth';
+import NextAuth, { User } from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
 import prisma from '../../../lib/prisma';
+
+const createUserSetting = async (user: User) => {
+  const currentSettings = await prisma.userSettings.findUnique({
+    where: {
+      userId: user.id,
+    },
+  });
+  console.log({ currentSettings });
+  if (!currentSettings) {
+    await prisma.userSettings.create({
+      data: {
+        user: { connect: { id: user.id } },
+      },
+    });
+  }
+};
 
 const options = {
   providers: [
@@ -36,6 +52,14 @@ const options = {
   secret: process.env.JWT_SECRET,
   theme: {
     colorScheme: 'dark',
+  },
+  callbacks: {
+    // @ts-ignore
+    async signIn({ user }) {
+      console.log({ user });
+      createUserSetting(user);
+      return true;
+    },
   },
 };
 // @ts-ignore

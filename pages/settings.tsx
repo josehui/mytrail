@@ -2,7 +2,7 @@ import React from 'react';
 import { useSession } from 'next-auth/react';
 import { Center, Title, Text } from '@mantine/core';
 import Layout from '../components/Layout';
-import AccountSettings from '../components/AccountSettings';
+import UserSettings from '../components/UserSettings';
 
 const Settings: React.FC = () => {
   const { data: session, status } = useSession();
@@ -21,7 +21,7 @@ const Settings: React.FC = () => {
       <Text mb={10} align="center">
         Edit your current settings{' '}
       </Text>
-      <AccountSettings />
+      <UserSettings />
     </Layout>
   );
 };

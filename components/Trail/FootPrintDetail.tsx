@@ -73,7 +73,7 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
               by {author?.name || author?.email || 'unknown'}
             </Text>
           </Container>
-          <Table sx={{ textAlign: 'left' }}>
+          <Table sx={{ textAlign: 'left' }} mb={5}>
             <tbody>
               <tr>
                 <th>Address:</th>
