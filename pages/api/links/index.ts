@@ -9,6 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const session = await getSession({ req });
   if (!session) {
     res.status(401).json({ error: 'Unauthorized' });
+    return;
   }
   if (req.method === 'POST') {
     const result = await prisma.link.create({

@@ -19,7 +19,7 @@ const UserSettings = () => {
     <div style={{ maxWidth: 320, margin: 'auto' }}>
       <NumberInput
         label="Reminder Frequency (in minutes)"
-        description="From 30 to 600 minutes"
+        description="From 30 to 600 minutes. A reminder will be sent if no new footprint recevied for the configured time"
         placeholder=""
         mt="md"
         max={600}
@@ -41,7 +41,7 @@ const UserSettings = () => {
         Notification Setting
       </Button>
       <NumberInput
-        label="Time before SOS"
+        label="Time before SOS (in hours)"
         description="From 12 to 120 hours. A SOS message will be sent if no new footprint recevied for the configured time"
         placeholder=""
         mt="md"

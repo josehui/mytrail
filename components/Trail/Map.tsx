@@ -111,7 +111,7 @@ const Map = (props: mapProps) => {
           })}
         </GoogleMap>
       )}
-      {loadError && <Text>Error loading map, sorry</Text>}
+      {loadError && <Text>Fail to load map, please check connection</Text>}
     </Center>
   );
 };

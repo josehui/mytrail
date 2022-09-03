@@ -18,12 +18,14 @@ const MyTrail: React.FC = () => {
       </Layout>
     );
   }
-
-  return (
-    <Layout>
-      <Trail />
-    </Layout>
-  );
+  if (session) {
+    return (
+      <Layout>
+        <Trail />
+      </Layout>
+    );
+  }
+  return <></>;
 };
 
 export default MyTrail;

@@ -16,14 +16,17 @@ const Settings: React.FC = () => {
       </Layout>
     );
   }
-  return (
-    <Layout>
-      <Text mb={10} align="center">
-        Edit your current settings{' '}
-      </Text>
-      <UserSettings />
-    </Layout>
-  );
+  if (session) {
+    return (
+      <Layout>
+        <Text mb={10} align="center">
+          Edit your current settings{' '}
+        </Text>
+        <UserSettings />
+      </Layout>
+    );
+  }
+  return <></>;
 };
 
 export default Settings;

@@ -1,19 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import webPush from 'web-push';
-
-webPush.setVapidDetails(
-  `mailto:${process.env.WEB_PUSH_EMAIL}`,
-  process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY!,
-  process.env.WEB_PUSH_PRIVATE_KEY!
-);
+import wpClient from '../../../lib/web-push';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
   if (req.method === 'POST' && session) {
     const { subscription } = req.body;
     try {
-      const wpRes = await webPush.sendNotification(
+      const wpRes = await wpClient.sendNotification(
         subscription,
         JSON.stringify({
           title: 'TEST - push notification',

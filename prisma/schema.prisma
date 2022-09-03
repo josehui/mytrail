@@ -78,6 +78,7 @@ model User {
   footprints    Footprint[]
   links         Link[]
   setting       UserSettings?
+  pushNotification  PushSubscription[]
 }
 
 model VerificationToken {
@@ -108,8 +109,10 @@ model UserSettings {
 }
 
 model PushSubscription {
-  id          String   @id @default(cuid())
-  endpoint    String
+  id            String   @id 
+  endpoint      String
   expirationTime DateTime?
-  keys        Json
+  keys          Json
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id])
 }
