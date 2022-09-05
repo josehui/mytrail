@@ -15,4 +15,9 @@ declare global {
   interface PushSubscription {
     expirationTime: DOMHighResTimeStamp;
   }
+  interface Error {
+    status?: number;
+    code?: number;
+    info?: string;
+  }
 }

@@ -2,7 +2,7 @@
 /* eslint-disable react/self-closing-comp */
 import { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
-import { AppProps } from 'next/app';
+import type { AppProps } from 'next/app';
 import { getCookie, setCookie } from 'cookies-next';
 import Head from 'next/head';
 import { MantineProvider, ColorScheme, ColorSchemeProvider, Global } from '@mantine/core';

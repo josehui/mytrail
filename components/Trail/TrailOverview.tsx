@@ -7,13 +7,17 @@ import { DatePicker } from '@mantine/dates';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconPlus } from '@tabler/icons';
 import Trailline from './Trailline';
-import { FootPrintCardProps } from './FootPrintCard';
+import type { FootPrintCardProps } from './FootPrintCard';
 import FootPrintForm from './FootPrintForm';
 import Map from './Map';
 import { UTCToLocal, LocalToUTC } from '../../lib/timeUtil';
+import { handleFetchError } from '../../lib/error-handling';
 
-const fetcher: Fetcher<FootPrintCardProps[], string> = (id, params = '') =>
-  fetch(`${id}${params}`).then((res) => res.json());
+const fetcher: Fetcher<FootPrintCardProps[], string> = async (id, params = '') => {
+  const res = await fetch(`${id}${params}`);
+  await handleFetchError(res);
+  return res.json();
+};
 type TrailProps = {
   linkId?: string;
   authorName?: string;

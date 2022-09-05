@@ -10,13 +10,18 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import useSWR, { Fetcher, useSWRConfig } from 'swr';
+import { handleFetchError } from '../lib/error-handling';
 
 type linkProps = {
   id: string;
   userId: string;
   expires: string;
 };
-const fetcher: Fetcher<linkProps[], string> = (id) => fetch(id).then((res) => res.json());
+const fetcher: Fetcher<linkProps[], string> = async (id) => {
+  const res = await fetch(id);
+  await handleFetchError(res);
+  return res.json();
+};
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -45,9 +50,10 @@ export default function ShareForm() {
 
   const genLink = async () => {
     try {
-      await fetch('/api/links', {
+      const res = await fetch('/api/links', {
         method: 'POST',
       });
+      await handleFetchError(res);
       mutate('/api/links');
       setGenerated(true);
     } catch (error) {
@@ -57,9 +63,10 @@ export default function ShareForm() {
 
   const deleteLink = async (id: string) => {
     try {
-      await fetch(`/api/links?id=${id}`, {
+      const res = await fetch(`/api/links?id=${id}`, {
         method: 'DELETE',
       });
+      await handleFetchError(res);
       mutate('/api/links');
     } catch (error) {
       console.error(error);

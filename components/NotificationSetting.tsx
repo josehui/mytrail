@@ -3,6 +3,7 @@ import { showNotification } from '@mantine/notifications';
 import { Title, Text, Switch, Chip, Loader, Group } from '@mantine/core';
 import Link from 'next/link';
 import { base64ToUint8Array } from '../lib/buffer';
+import { handleFetchError } from '../lib/error-handling';
 
 const NotificationSetting = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -20,7 +21,6 @@ const NotificationSetting = () => {
       'PushManager' in window &&
       window.workbox !== undefined
     ) {
-      console.log('supported');
       setIsDeviceSupported(true);
       // run only in browser
       navigator.serviceWorker.ready.then((reg) => {
@@ -33,7 +33,6 @@ const NotificationSetting = () => {
         setRegistration(reg);
       });
     } else {
-      console.log('not supported');
       setIsDeviceSupported(false);
     }
   }, []);
@@ -86,7 +85,7 @@ const NotificationSetting = () => {
     }
     // Unsubscribe
     if (!subscribe) {
-      await fetch('/api/notification', {
+      const res = await fetch('/api/notification', {
         method: 'DELETE',
         headers: {
           'Content-type': 'application/json',
@@ -95,6 +94,7 @@ const NotificationSetting = () => {
           subscription,
         }),
       });
+      await handleFetchError(res);
       await subscription?.unsubscribe();
       setSubscription(null);
       setIsSubscribed(false);

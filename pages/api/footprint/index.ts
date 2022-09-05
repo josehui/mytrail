@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'GET') {
-    const authorEmail = linkAuthor?.email ? linkAuthor?.email : session?.user?.email;
+    const authorEmail = linkAuthor?.email ? linkAuthor.email : session?.user?.email;
     const startD = req.query.date ? new Date(req.query.date.toString()) : new Date();
     if (!req.query.date) {
       startD.setHours(0, 0, 0, 0);

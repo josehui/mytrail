@@ -22,6 +22,7 @@ import {
   IconMapSearch,
 } from '@tabler/icons';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
+import { handleFetchError } from '../../lib/error-handling';
 
 interface ImageProps {
   dropZoneProps?: Partial<DropzoneProps>;
@@ -166,6 +167,7 @@ const FootPrintForm = (props: FormProps) => {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
+        await handleFetchError(res);
         const addressData = await res.json();
         form.setFieldValue('address', addressData?.results?.[0]?.formatted_address);
       } catch (error) {
@@ -198,11 +200,12 @@ const FootPrintForm = (props: FormProps) => {
       // eslint-disable-next-line no-param-reassign
       formData.timestamp = new Date(formData.timestamp).toISOString();
       const body = formData;
-      await fetch('/api/footprint', {
+      const res = await fetch('/api/footprint', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
+      await handleFetchError(res, 'Error creating footprint');
       mutate(['/api/footprint', queryParams]);
     } catch (error) {
       console.error(error);
