@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
+import prisma from '../../../lib/prisma';
 
 const { subtle } = require('crypto').webcrypto;
 
@@ -21,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { subscription } = req.body;
     console.log({ subscription });
     const subHash = await createHashHex(subscription.endpoint);
-    const result = await prisma.PushSubscription.create({
+    const result = await prisma.pushSubscription.create({
       data: {
         id: subHash,
         ...subscription,
@@ -34,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'DELETE') {
     const { subscription } = req.body;
     const subHash = await createHashHex(subscription.endpoint);
-    const result = await prisma.PushSubscription.delete({
+    const result = await prisma.pushSubscription.delete({
       where: {
         id: subHash,
       },

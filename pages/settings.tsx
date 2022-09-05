@@ -4,10 +4,11 @@ import { getSession } from 'next-auth/react';
 import { Center, Title, Text } from '@mantine/core';
 import Layout from '../components/Layout';
 import UserSettings from '../components/UserSettings';
-import type { userSettingProps } from '../components/UserSettings';
+import type { settingFormProps } from '../components/UserSettings';
+import prisma from '../lib/prisma';
 
 interface settingPageProps {
-  settings: userSettingProps;
+  settings: settingFormProps;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
@@ -16,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     res.statusCode = 403;
     return { props: { settings: [] } };
   }
-  const settings = await prisma.UserSettings.findFirst({
+  const settings = await prisma.userSettings.findFirst({
     where: {
       user: { email: session?.user?.email },
     },

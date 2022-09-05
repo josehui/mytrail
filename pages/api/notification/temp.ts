@@ -15,11 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     console.log({ subscriptionList });
     try {
-      const picked = (({ endpoint, expirationTime, keys }) => ({ endpoint, expirationTime, keys }))(
-        subscriptionList[0]
-      );
+      // const picked = (({ endpoint, expirationTime, keys }) => ({ endpoint, expirationTime, keys }))(
+      //   subscriptionList[0]
+      // );
       const wpRes = await wpClient.sendNotification(
-        picked,
+        subscription,
         JSON.stringify({
           title: 'TEST - push notification',
           message: 'Your web push notification is here!',

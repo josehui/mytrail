@@ -48,8 +48,7 @@ const NotificationSetting = () => {
           userVisibleOnly: true,
           applicationServerKey: base64ToUint8Array(process.env.NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY!),
         });
-        // TODO: you should call your API to save subscription data on server in order to send web push notification from server
-        await fetch('/api/notification', {
+        const res = await fetch('/api/notification', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',
@@ -58,6 +57,7 @@ const NotificationSetting = () => {
             subscription: sub,
           }),
         });
+        await handleFetchError(res);
         showNotification({
           id: 'subscribe-success',
           autoClose: 5000,
@@ -85,27 +85,38 @@ const NotificationSetting = () => {
     }
     // Unsubscribe
     if (!subscribe) {
-      const res = await fetch('/api/notification', {
-        method: 'DELETE',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          subscription,
-        }),
-      });
-      await handleFetchError(res);
-      await subscription?.unsubscribe();
+      try {
+        await subscription?.unsubscribe();
+        const res = await fetch('/api/notification', {
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            subscription,
+          }),
+        });
+        await handleFetchError(res);
+        showNotification({
+          id: 'unsubscribe-success',
+          autoClose: 5000,
+          title: 'Unsubscribed',
+          message: 'You will no longer receive notifications',
+          color: 'blue',
+          loading: false,
+        });
+      } catch (error) {
+        showNotification({
+          id: 'unsubscribe-error',
+          autoClose: 5000,
+          title: 'Error',
+          message: 'Please disable and re-enable permission',
+          color: 'red',
+          loading: false,
+        });
+      }
       setSubscription(null);
       setIsSubscribed(false);
-      showNotification({
-        id: 'unsubscribe-success',
-        autoClose: 5000,
-        title: 'Unsubscribed',
-        message: 'You will no longer receive notifications',
-        color: 'blue',
-        loading: false,
-      });
     }
   };
 

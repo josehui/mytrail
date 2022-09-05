@@ -10,12 +10,14 @@ import {
   SimpleGrid,
   Container,
 } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import NotificationSetting from './NotificationSetting';
+import { handleFetchError } from '../lib/error-handling';
 
-export interface userSettingProps {
+export interface settingFormProps {
   reminderFreq: number;
   sosTime: number;
-  emailList: string[];
+  emailList: string[] | string;
   emailMessage: string;
   defaultMessage: string;
 }
@@ -27,7 +29,7 @@ const defaultSetting = {
   emailMessage: 'Hello, please send help',
   defaultMessage: 'I am fine, thanks',
 };
-const UserSettings = (props: userSettingProps) => {
+const UserSettings = (props: settingFormProps) => {
   const form = useForm({
     initialValues: {
       emailList: props.emailList,
@@ -39,6 +41,29 @@ const UserSettings = (props: userSettingProps) => {
   });
   const [openNotificationSetting, setOpenNotificationSetting] = useState<boolean>(false);
 
+  const submitSettings = async (formData: settingFormProps) => {
+    try {
+      // eslint-disable-next-line no-param-reassign
+      formData.emailList = formData.emailList.toString().replace(/\s/g, '').split(',');
+      form.setFieldValue('emailList', formData.emailList);
+      const res = await fetch('/api/account/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      await handleFetchError(res, 'Error saving settings');
+      showNotification({
+        id: 'setting-saved',
+        autoClose: 5000,
+        title: 'Settings saved',
+        message: '',
+        color: 'green',
+        loading: false,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <SimpleGrid cols={2} spacing="xs" breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}>
@@ -116,19 +141,7 @@ const UserSettings = (props: userSettingProps) => {
         <Button variant="outline" onClick={() => form.setValues(defaultSetting)}>
           Reset
         </Button>
-        <Button
-          onClick={() =>
-            form.setValues({
-              emailList: [],
-              reminderFreq: 88,
-              sosTime: 20,
-              emailMessage: 'haha',
-              defaultMessage: 'ss',
-            })
-          }
-        >
-          Save
-        </Button>
+        <Button onClick={() => submitSettings(form.values)}>Save</Button>
       </Group>
     </>
   );

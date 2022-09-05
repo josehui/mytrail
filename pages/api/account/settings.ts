@@ -19,9 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         setting: {
           update: {
-            reminderFreq: reminderFreq || 180,
-            sosTime: sosTime || 24,
-            emailList: emailList || [],
+            reminderFreq,
+            sosTime,
+            emailList,
             emailMessage,
             defaultMessage,
           },

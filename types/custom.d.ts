@@ -16,7 +16,8 @@ declare global {
     expirationTime: DOMHighResTimeStamp;
   }
   interface Error {
-    status?: number;
+    status: number;
+    statusText?: string;
     code?: number;
     info?: string;
   }

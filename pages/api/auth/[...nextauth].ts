@@ -13,7 +13,6 @@ const createUserSetting = async (user: User) => {
       userId: user.id,
     },
   });
-  console.log({ currentSettings });
   if (!currentSettings) {
     await prisma.userSettings.create({
       data: {
@@ -56,7 +55,6 @@ const options = {
   callbacks: {
     // @ts-ignore
     async signIn({ user }) {
-      console.log({ user });
       createUserSetting(user);
       return true;
     },

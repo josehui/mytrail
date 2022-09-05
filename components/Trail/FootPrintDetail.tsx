@@ -13,7 +13,6 @@ import {
 } from '@mantine/core';
 import Map from './Map';
 import { FootPrintCardProps } from './FootPrintCard';
-import { time } from 'console';
 
 const useStyles = createStyles((theme) => ({
   wrapper: {
