@@ -133,18 +133,30 @@ const NotificationSetting = () => {
       return;
     }
     if (!isTested) {
-      console.log({ subscription });
+      // console.log({ subscription });
       setIsTesting(true);
-      await fetch('/api/cron/reminder', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          subscription,
-        }),
-      });
-      setIsTested(true);
+      try {
+        const res = await fetch('/api/cron/reminder', {
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            subscription,
+          }),
+        });
+        await handleFetchError(res);
+        setIsTested(true);
+      } catch (error) {
+        showNotification({
+          id: 'test-fail',
+          autoClose: 5000,
+          title: 'Failed to test notification',
+          message: 'Error with subscription',
+          color: 'red',
+          loading: false,
+        });
+      }
       setIsTesting(false);
     }
   };

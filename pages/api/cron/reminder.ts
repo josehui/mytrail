@@ -5,11 +5,7 @@ import wpClient from '../../../lib/web-push';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // TO-DO verify JWT, return if not valid
   if (req.method === 'POST') {
-    // const { subscription } = req.body;
-
-    // TO-DO find last footprint, group by each user
-    // prisma.user.findMany
-
+    console.log('hihi');
     const lastFootprintList = await prisma.footprint.findMany({
       where: {},
       orderBy: {
@@ -29,9 +25,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         },
       },
     });
-    console.log({ lastFootprintList });
-    console.log(lastFootprintList[0].author?.pushNotification);
-    console.log(lastFootprintList[0].author?.setting);
 
     for (let i = 0; i < lastFootprintList.length; i += 1) {
       const freq = lastFootprintList[i]?.author?.setting?.reminderFreq || 180;

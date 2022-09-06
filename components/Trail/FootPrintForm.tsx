@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, TextInput, Button, Group, Box, Textarea, Loader } from '@mantine/core';
 import { useSWRConfig } from 'swr';
 import { useForm } from '@mantine/form';
 import { IconClock, IconMapPin, IconMapSearch } from '@tabler/icons';
 import ImageUpload from './ImageUpload';
 import { handleFetchError } from '../../lib/error-handling';
+import { settingsContext } from '../Context/Context';
 
 interface FormDataProps {
   location: string;
@@ -20,6 +21,7 @@ interface FormProps {
 }
 
 const FootPrintForm = (props: FormProps) => {
+  const userSettings = useContext(settingsContext);
   const { setOpenForm, queryParams } = props;
   const [images, setImages] = useState<File[] | null>();
   const [loadingLocation, setLoadingLocation] = useState<boolean>(false);
@@ -30,7 +32,7 @@ const FootPrintForm = (props: FormProps) => {
     initialValues: {
       location: '',
       address: '',
-      remarks: 'I am fine, thanks',
+      remarks: userSettings?.defaultMessage || 'I am fine, thanks"',
       timestamp: new Date().toISOString(),
       images: [],
     },

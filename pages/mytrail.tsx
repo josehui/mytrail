@@ -1,12 +1,37 @@
 // pages/drafts.tsx
 
 import React from 'react';
-import { useSession } from 'next-auth/react';
+import { GetServerSideProps } from 'next';
+import { useSession, getSession } from 'next-auth/react';
 import { Center, Title, Text } from '@mantine/core';
 import Layout from '../components/Layout';
 import Trail from '../components/Trail/TrailOverview';
+import { settingFormProps } from '../components/UserSettings';
+import prisma from '../lib/prisma';
+import { settingsContext } from '../components/Context/Context';
 
-const MyTrail: React.FC = () => {
+interface MyTrailPageProps {
+  userSettings: settingFormProps;
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const session = await getSession({ req });
+  if (!session) {
+    res.statusCode = 403;
+    return { props: { userSettings: [] } };
+  }
+  const userSettings = await prisma.userSettings.findFirst({
+    where: {
+      user: { email: session?.user?.email },
+    },
+  });
+  return {
+    props: { userSettings },
+  };
+};
+
+const MyTrail: React.FC<MyTrailPageProps> = (props: MyTrailPageProps) => {
+  const { userSettings } = props;
   const { data: session, status } = useSession();
   if (!session && status !== 'loading') {
     return (
@@ -20,9 +45,11 @@ const MyTrail: React.FC = () => {
   }
   if (session) {
     return (
-      <Layout>
-        <Trail />
-      </Layout>
+      <settingsContext.Provider value={userSettings}>
+        <Layout>
+          <Trail />
+        </Layout>
+      </settingsContext.Provider>
     );
   }
   return <></>;
