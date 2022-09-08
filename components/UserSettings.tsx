@@ -38,6 +38,11 @@ const UserSettings = (props: settingFormProps) => {
       emailMessage: props.emailMessage,
       defaultMessage: props.defaultMessage,
     },
+    validate: {
+      emailList: (value: string) =>
+        /^([\w-.]+@([\w-]+\.)+[\w-]{2,4}(,|$)\s{0,1})+$/.test(value) ? null : 'Invalid emails',
+    },
+    validateInputOnChange: true,
   });
   const [openNotificationSetting, setOpenNotificationSetting] = useState<boolean>(false);
 
@@ -65,7 +70,7 @@ const UserSettings = (props: settingFormProps) => {
     }
   };
   return (
-    <>
+    <form onSubmit={form.onSubmit((values) => submitSettings(values))}>
       <SimpleGrid cols={2} spacing="xs" breakpoints={[{ maxWidth: 600, cols: 1, spacing: 'sm' }]}>
         <Container size="sm">
           <NumberInput
@@ -141,9 +146,9 @@ const UserSettings = (props: settingFormProps) => {
         <Button variant="outline" onClick={() => form.setValues(defaultSetting)}>
           Reset
         </Button>
-        <Button onClick={() => submitSettings(form.values)}>Save</Button>
+        <Button type="submit">Save</Button>
       </Group>
-    </>
+    </form>
   );
 };
 

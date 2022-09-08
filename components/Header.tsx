@@ -22,10 +22,10 @@ import {
 } from '@tabler/icons';
 import { ColorSchemeToggle } from './ColorSchemeToggle';
 import ShareForm from './ShareForm';
-// import Image from 'next/image';
+import { IconMyTrail } from './Icons/MytrailIcon';
+
 const useStyles = createStyles((theme) => ({
   header: {
-    paddingTop: theme.spacing.sm,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[0],
     borderBottom: `1px solid ${
       theme.colorScheme === 'dark' ? 'transparent' : theme.colors.gray[2]
@@ -38,9 +38,9 @@ const useStyles = createStyles((theme) => ({
     zIndex: 1000,
   },
 
-  mainSection: {
-    paddingBottom: theme.spacing.sm,
-  },
+  // mainSection: {
+  //   paddingBottom: 0,
+  // },
 
   user: {
     color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
@@ -155,13 +155,16 @@ export default function HeaderTabs() {
 
   return (
     <div className={classes.header}>
-      <Container size="xl" className={classes.mainSection}>
+      <Container size="xl">
         <Group position="apart">
-          <Link href="/" passHref>
-            <Text component="a" weight={800} size="md" sx={{ lineHeight: 1 }} mr={3}>
-              MyTrail
-            </Text>
-          </Link>
+          <Group spacing={0}>
+            <IconMyTrail />
+            <Link href="/" passHref>
+              <Text component="a" weight={800} size="md" sx={{ lineHeight: 1 }} mr={3}>
+                MyTrail
+              </Text>
+            </Link>
+          </Group>
           <Group>
             <ColorSchemeToggle />
             {!session && status !== 'loading' && (

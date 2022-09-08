@@ -7,6 +7,7 @@ import FootPrintNote from './FootPrintNote';
 
 export type TraillineProps = {
   footprints: FootPrintCardProps[];
+  openDrawer?: boolean;
 };
 
 const TitleAsLink = ({ title, id }: { title: string; id: string }) => (
@@ -20,7 +21,7 @@ const Trailine: React.FC<TraillineProps> = (props) => {
   const footprintCount = props.footprints.length;
   return (
     <Container size="xs">
-      <Center mx={20}>
+      <Center>
         <Timeline active={footprintCount} bulletSize={24} lineWidth={2}>
           {props?.footprints?.map((fp, idx) => {
             const CardData = {

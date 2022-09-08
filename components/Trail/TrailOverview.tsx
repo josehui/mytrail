@@ -12,6 +12,8 @@ import FootPrintForm from './FootPrintForm';
 import Map from './Map';
 import { UTCToLocal, LocalToUTC } from '../../lib/timeUtil';
 import { handleFetchError } from '../../lib/error-handling';
+import TrailDrawer from './TrailDrawer';
+import { IconGps } from '@tabler/icons';
 
 const fetcher: Fetcher<FootPrintCardProps[], string> = async (id, params = '') => {
   const res = await fetch(`${id}${params}`);
@@ -33,6 +35,7 @@ const Trail: React.FC<TrailProps> = (props) => {
   const { data: footprints } = useSWR(targetDate ? ['/api/footprint', queryParams] : null, fetcher);
   const footprintCount = footprints?.length ? footprints.length : 0;
   const [openForm, setOpenForm] = useState<boolean>(router.query.fp === 'true');
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
   const setDateParam = (date: Date) => {
     const localISOTime = UTCToLocal(date);
@@ -112,12 +115,23 @@ const Trail: React.FC<TrailProps> = (props) => {
         </Grid>
       )}
       {!wideScreen && (
-        <Grid mx={10}>
+        <Grid mx={-20}>
           <Grid.Col sm={12} md={7} lg={7}>
-            {footprints && footprintCount > 0 && <Map footprints={footprints} />}
+            {footprints && footprintCount > 0 && (
+              <Map {...{ footprints, setOpenDrawer, openDrawer, withDrawer: true }} />
+            )}
           </Grid.Col>
-          <Grid.Col sm={12} md={5} lg={5}>
-            {footprints && footprintCount > 0 && <Trailline footprints={footprints} />}
+          <Grid.Col sm={12} md={5} lg={5} mt="70vh">
+            <TrailDrawer {...{ openDrawer, setOpenDrawer }}>
+              {footprints && footprintCount > 0 && <Trailline footprints={footprints} />}
+            </TrailDrawer>
+            {footprints && footprintCount > 0 && (
+              <Group position="center">
+                <Button rightIcon={<IconGps />} color="dark" onClick={() => setOpenDrawer(true)}>
+                  Open Trail
+                </Button>
+              </Group>
+            )}
           </Grid.Col>
         </Grid>
       )}

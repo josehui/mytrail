@@ -12,19 +12,14 @@ const useStyles = createStyles(() => ({
   },
 }));
 
-const containerStyle = {
-  width: '100vw',
-  height: '80vh',
-  maxHeight: '80vw',
-  borderRadius: '5px',
-};
-
 const mapOptions = {
   mapTypeControl: false,
 };
 
 interface mapProps {
   footprints: FootPrintCardProps[];
+  setOpenDrawer?: React.Dispatch<React.SetStateAction<boolean>>;
+  withDrawer?: boolean;
 }
 
 const markerIcon = (color: string) => ({
@@ -41,12 +36,21 @@ const markerIcon = (color: string) => ({
 });
 
 const Map = (props: mapProps) => {
-  const { footprints } = props;
+  const { setOpenDrawer, footprints } = props;
   const [mapRef, setMapRef] = useState<any>();
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY!, // ,
   });
   const { classes } = useStyles();
+  const containerStyle = {
+    top: 0,
+    width: '100vw',
+    height: '80vh',
+    position: props.withDrawer ? ('absolute' as 'absolute') : ('relative' as 'relative'),
+    // position: 'relative' as 'relative',
+    borderRadius: 5,
+  };
+  const [targetId, setTargetId] = useState<string>();
 
   const setBound = (map: google.maps.Map) => {
     if (footprints.length > 1) {
@@ -76,6 +80,15 @@ const Map = (props: mapProps) => {
     if (mapRef) setBound(mapRef);
   }, [footprints]);
 
+  useEffect(() => {
+    if (targetId) {
+      console.log('scrolling');
+      setTimeout(() => {
+        window.location.href = targetId;
+      }, 10);
+    }
+  });
+
   return (
     <Center mx={10} sx={{ position: 'sticky', top: 100 }}>
       {isLoaded && (
@@ -104,7 +117,8 @@ const Map = (props: mapProps) => {
                 // Drop animation
                 animation={2}
                 onClick={() => {
-                  window.location.href = `#${idx.toString()}`;
+                  setOpenDrawer?.(true);
+                  setTargetId(`#${idx.toString()}`);
                 }}
               />
             );

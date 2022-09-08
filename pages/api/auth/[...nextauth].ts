@@ -5,6 +5,7 @@ import NextAuth, { User } from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
+import FacebookProvider from 'next-auth/providers/facebook';
 import prisma from '../../../lib/prisma';
 
 const createUserSetting = async (user: User) => {
@@ -35,6 +36,10 @@ const options = {
         },
       },
     }),
+    FacebookProvider({
+      clientId: process.env.FACEBOOK_CLIENT_ID!,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+    }),
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
@@ -59,6 +64,9 @@ const options = {
       return true;
     },
   },
+  // pages: {
+  //   signIn: '/auth/signin',
+  // },
 };
 // @ts-ignore
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);

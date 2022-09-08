@@ -9,13 +9,14 @@ import prisma from '../lib/prisma';
 
 interface settingPageProps {
   settings: settingFormProps;
+  auth: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   const session = await getSession({ req });
   if (!session) {
     res.statusCode = 403;
-    return { props: { settings: [] } };
+    return { props: { settings: null, auth: false } };
   }
   const settings = await prisma.userSettings.findFirst({
     where: {
@@ -23,12 +24,12 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     },
   });
   return {
-    props: { settings },
+    props: { settings, auth: true },
   };
 };
 
 const Settings: React.FC<settingPageProps> = (props: settingPageProps) => {
-  if (!props.settings) {
+  if (!props.auth) {
     return (
       <Layout>
         <Center>
