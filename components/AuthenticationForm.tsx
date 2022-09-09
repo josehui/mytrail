@@ -2,11 +2,9 @@ import { useToggle, upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
-  PasswordInput,
   Text,
   Paper,
   Group,
-  PaperProps,
   Button,
   Divider,
   Checkbox,
@@ -14,43 +12,104 @@ import {
   Stack,
   Container,
 } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import { GoogleIcon, FacebookIcon } from './Icons/SocialIcons';
+import { handleFetchError } from '../lib/error-handling';
 
-const AuthenticationForm = (props: PaperProps) => {
-  const [type, toggle] = useToggle(['continue', 'register']);
+// @ts-ignore
+const AuthenticationForm = ({ csrfToken, providers, signIn }) => {
+  const [type, toggle] = useToggle(['Get', 'register']);
   const form = useForm({
     initialValues: {
       email: '',
       name: '',
-      password: '',
+      // password: '',
       terms: true,
+      csrfToken,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      // password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
     },
   });
 
+  const submitEmail = async (formData: any) => {
+    try {
+      // eslint-disable-next-line no-param-reassign
+      showNotification({
+        id: 'email-submitted',
+        autoClose: 5000,
+        title: 'Email submitted',
+        message: 'Please wait while your sign-in link is generated',
+        color: 'blue',
+        loading: true,
+      });
+      const res = await fetch('/api/auth/signin/email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      await handleFetchError(res, 'Error saving settings');
+      showNotification({
+        id: 'link-generated',
+        autoClose: 5000,
+        title: 'Sign-in link sent',
+        message: 'Please check your inbox for sign-in link',
+        color: 'green',
+        loading: false,
+      });
+    } catch (error) {
+      console.error(error);
+      showNotification({
+        id: 'email-error',
+        autoClose: 5000,
+        title: 'Error getting sign-in link',
+        message: 'Please check if email is correct',
+        color: 'red',
+        loading: false,
+      });
+    }
+  };
+
   return (
     <Container size="xs" pt="xl">
-      <Paper radius="md" p="xl" withBorder {...props}>
+      <Paper radius="md" p="xl" withBorder>
         <Text size="lg" weight={500}>
           Welcome to MyTrail, {type} with
         </Text>
 
         <Group grow mb="md" mt="md">
-          <Button leftIcon={<GoogleIcon />} radius="xl" color="gray">
-            Google
-          </Button>
-          <Button leftIcon={<FacebookIcon />} radius="xl" color="gray">
-            Facebook
-          </Button>
+          {providers.google && (
+            <Button
+              leftIcon={<GoogleIcon />}
+              radius="xl"
+              color="gray"
+              onClick={() => signIn(providers.google.id)}
+            >
+              Google
+            </Button>
+          )}
+          {providers.facebook && (
+            <Button
+              leftIcon={<FacebookIcon />}
+              radius="xl"
+              color="gray"
+              onClick={() => signIn(providers.facebook.id)}
+            >
+              Facebook
+            </Button>
+          )}
         </Group>
 
-        <Divider label="Or continue with email" labelPosition="center" my="lg" />
+        <Divider label="Or sign in with email" labelPosition="center" my="lg" />
 
-        <form onSubmit={form.onSubmit(() => {})}>
+        <form
+          onSubmit={form.onSubmit(async (values) => {
+            console.log(values);
+            submitEmail(values);
+          })}
+        >
           <Stack>
             {type === 'register' && (
               <TextInput
@@ -87,14 +146,14 @@ const AuthenticationForm = (props: PaperProps) => {
               />
             )}
           </Stack>
-
-          <Group position="apart" mt="xl">
+          <Group position="right" mt="xl">
             <Anchor
               component="button"
               type="button"
               color="dimmed"
               onClick={() => toggle()}
               size="xs"
+              hidden
             >
               {type === 'register'
                 ? 'Already have an account? Login'

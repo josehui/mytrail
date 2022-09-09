@@ -5,6 +5,8 @@ import { IconMyTrail } from './Icons/MytrailIcon';
 const useStyles = createStyles((theme) => ({
   footer: {
     marginTop: '4vh',
+    marginLeft: 5,
+    marginRight: 10,
     borderTop: `1px solid ${
       theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
     }`,
@@ -33,11 +35,22 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-interface FooterCenteredProps {
-  links: { link: string; label: string }[];
-}
+const links = [
+  {
+    link: '/terms',
+    label: 'Terms and Conditions',
+  },
+  {
+    link: '/privacy',
+    label: 'Privacy',
+  },
+  {
+    link: '/contact',
+    label: 'Contact',
+  },
+];
 
-const Footer = ({ links }: FooterCenteredProps) => {
+const Footer = () => {
   const { classes } = useStyles();
   const items = links.map((link) => (
     <Anchor<'a'>
@@ -45,7 +58,7 @@ const Footer = ({ links }: FooterCenteredProps) => {
       key={link.label}
       href={link.link}
       sx={{ lineHeight: 1 }}
-      onClick={(event) => event.preventDefault()}
+      // onClick={(event) => event.preventDefault()}
       size="sm"
     >
       {link.label}
@@ -62,7 +75,7 @@ const Footer = ({ links }: FooterCenteredProps) => {
           </Text>
         </Group>
         <Group className={classes.links}>{items}</Group>
-        <Group spacing="xs" position="right" noWrap>
+        <Group spacing="xs" position="right" noWrap ml={7}>
           <ActionIcon size="lg" variant="default" radius="xl">
             <IconBrandGithub size={18} stroke={1.5} />
           </ActionIcon>

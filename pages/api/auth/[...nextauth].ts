@@ -9,17 +9,20 @@ import FacebookProvider from 'next-auth/providers/facebook';
 import prisma from '../../../lib/prisma';
 
 const createUserSetting = async (user: User) => {
-  const currentSettings = await prisma.userSettings.findUnique({
-    where: {
-      userId: user.id,
-    },
-  });
-  if (!currentSettings) {
-    await prisma.userSettings.create({
-      data: {
-        user: { connect: { id: user.id } },
+  if (user) {
+    console.log(user.id);
+    const currentSettings = await prisma.userSettings.findUnique({
+      where: {
+        userId: user.id,
       },
     });
+    if (!currentSettings) {
+      await prisma.userSettings.create({
+        data: {
+          user: { connect: { id: user.id } },
+        },
+      });
+    }
   }
 };
 
@@ -64,9 +67,9 @@ const options = {
       return true;
     },
   },
-  // pages: {
-  //   signIn: '/auth/signin',
-  // },
+  pages: {
+    signIn: '/auth/signin',
+  },
 };
 // @ts-ignore
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
