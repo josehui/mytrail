@@ -1,13 +1,11 @@
 (() => {
   'use strict';
-  var __webpack_exports__ = {};
-
   self.addEventListener('push', function (event) {
     const data = JSON.parse(event.data.text());
     event.waitUntil(
       registration.showNotification(data.title, {
-        body: data.body,
-        icon: '/icons/android-chrome-192x192.png',
+        body: data.message,
+        icon: '/icons/icon-192x192.png',
         vibrate: [200, 100, 200, 100, 200, 100, 200],
         actions: [
           {
@@ -42,14 +40,21 @@
           return clients.openWindow('/');
         })
     );
-  }); // self.addEventListener('pushsubscriptionchange', function(event) {
-  //   event.waitUntil(
-  //       Promise.all([
-  //           Promise.resolve(event.oldSubscription ? deleteSubscription(event.oldSubscription) : true),
-  //           Promise.resolve(event.newSubscription ? event.newSubscription : subscribePush(registration))
-  //               .then(function(sub) { return saveSubscription(sub) })
-  //       ])
-  //   )
-  // })
-  /******/
+  });
+  self.addEventListener('notificationclick', (event) => {
+    console.log(event);
+  });
+
+  self.addEventListener('pushsubscriptionchange', function (event) {
+    event.waitUntil(
+      Promise.all([
+        Promise.resolve(event.oldSubscription ? deleteSubscription(event.oldSubscription) : true),
+        Promise.resolve(
+          event.newSubscription ? event.newSubscription : subscribePush(registration)
+        ).then(function (sub) {
+          return saveSubscription(sub);
+        }),
+      ])
+    );
+  });
 })();

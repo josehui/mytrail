@@ -5,7 +5,6 @@ import wpClient from '../../../lib/web-push';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // TO-DO verify JWT, return if not valid
   if (req.method === 'POST') {
-    console.log('hihi');
     const lastFootprintList = await prisma.footprint.findMany({
       where: {},
       orderBy: {

@@ -20,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   if (req.method === 'POST') {
     const { subscription } = req.body;
-    console.log({ subscription });
     const subHash = await createHashHex(subscription.endpoint);
     const result = await prisma.pushSubscription.create({
       data: {

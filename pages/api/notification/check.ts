@@ -10,8 +10,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const wpRes = await wpClient.sendNotification(
         subscription,
         JSON.stringify({
-          title: 'TEST - push notification',
-          message: 'Your web push notification is here!',
+          title: 'TEST - Push Notification',
+          message: 'Your notification is here!',
         })
       );
       res.writeHead(wpRes.statusCode, wpRes.headers).end(wpRes.body);
