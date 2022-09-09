@@ -136,7 +136,7 @@ const NotificationSetting = () => {
       // console.log({ subscription });
       setIsTesting(true);
       try {
-        const res = await fetch('/api/notification/check', {
+        const res = await fetch('/api/cron/reminder', {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',

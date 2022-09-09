@@ -18,7 +18,7 @@ import { handleFetchError } from '../lib/error-handling';
 
 // @ts-ignore
 const AuthenticationForm = ({ csrfToken, providers, signIn }) => {
-  const [type, toggle] = useToggle(['Get', 'register']);
+  const [type, toggle] = useToggle(['Continue', 'register']);
   const form = useForm({
     initialValues: {
       email: '',

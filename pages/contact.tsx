@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Paper,
   Text,
@@ -113,6 +114,7 @@ interface contactFormProps {
 
 const ContactPage = () => {
   const { classes } = useStyles();
+  const [submitted, setSubmitted] = useState<boolean>(false);
   const form = useForm({
     initialValues: {
       name: '',
@@ -145,6 +147,7 @@ const ContactPage = () => {
     } catch (error) {
       console.error(error);
     }
+    setSubmitted(true);
   };
 
   return (
@@ -200,7 +203,7 @@ const ContactPage = () => {
                 />
 
                 <Group position="right" mt="md">
-                  <Button type="submit" className={classes.control}>
+                  <Button type="submit" disabled={submitted} className={classes.control}>
                     Send message
                   </Button>
                 </Group>
