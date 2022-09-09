@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, TextInput, Button, Group, Box, Textarea, Loader } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import { useSWRConfig } from 'swr';
 import { useForm } from '@mantine/form';
 import { IconClock, IconMapPin, IconMapSearch } from '@tabler/icons';
@@ -82,6 +83,14 @@ const FootPrintForm = (props: FormProps) => {
         form.setFieldValue('address', addressData?.results?.[0]?.formatted_address);
       } catch (error) {
         console.error(error);
+        showNotification({
+          id: 'get-fp-error',
+          autoClose: 5000,
+          title: 'Error getting footprints',
+          message: error as string,
+          color: 'red',
+          loading: false,
+        });
       }
       setLoadingLocation(false);
     };
@@ -116,9 +125,25 @@ const FootPrintForm = (props: FormProps) => {
         body: JSON.stringify(body),
       });
       await handleFetchError(res, 'Error creating footprint');
+      showNotification({
+        id: 'post-fp-success',
+        autoClose: 5000,
+        title: 'Footprint added',
+        message: '',
+        color: 'green',
+        loading: false,
+      });
       mutate(['/api/footprint', queryParams]);
     } catch (error) {
       console.error(error);
+      showNotification({
+        id: 'post-fp-error',
+        autoClose: 5000,
+        title: 'Error adding footprint',
+        message: 'Please check input format',
+        color: 'red',
+        loading: false,
+      });
     }
   };
 

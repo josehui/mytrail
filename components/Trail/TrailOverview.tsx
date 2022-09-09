@@ -3,9 +3,9 @@ import useSWR, { Fetcher } from 'swr';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { Container, Button, Group, Modal, Title, Grid, Text } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DateRangePicker, DateRangePickerValue } from '@mantine/dates';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconPlus } from '@tabler/icons';
+import { IconPlus, IconGps } from '@tabler/icons';
 import Trailline from './Trailline';
 import type { FootPrintCardProps } from './FootPrintCard';
 import FootPrintForm from './FootPrintForm';
@@ -13,7 +13,6 @@ import Map from './Map';
 import { UTCToLocal, LocalToUTC } from '../../lib/timeUtil';
 import { handleFetchError } from '../../lib/error-handling';
 import TrailDrawer from './TrailDrawer';
-import { IconGps } from '@tabler/icons';
 
 const fetcher: Fetcher<FootPrintCardProps[], string> = async (id, params = '') => {
   const res = await fetch(`${id}${params}`);
@@ -29,28 +28,39 @@ const Trail: React.FC<TrailProps> = (props) => {
   const { linkId, authorName } = props;
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [targetDate, setTargetDate] = useState<Date>();
-  const UTCDate = targetDate?.toISOString();
-  const queryParams = `?date=${UTCDate}&id=${linkId}`;
-  const { data: footprints } = useSWR(targetDate ? ['/api/footprint', queryParams] : null, fetcher);
+  const [targetDates, setTargetDates] = useState<DateRangePickerValue>([
+    new Date(2022, 8, 9),
+    new Date(2022, 8, 10),
+  ]);
+  const UTCDates = targetDates.map((date) => date?.toISOString());
+  const queryParams = `?sd=${UTCDates?.[0]}&ed=${UTCDates?.[1]}&id=${linkId}`;
+  const { data: footprints } = useSWR(
+    targetDates ? ['/api/footprint', queryParams] : null,
+    fetcher
+  );
   const footprintCount = footprints?.length ? footprints.length : 0;
   const [openForm, setOpenForm] = useState<boolean>(router.query.fp === 'true');
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
-  const setDateParam = (date: Date) => {
-    const localISOTime = UTCToLocal(date);
-    const localISOTimeString = localISOTime.toISOString().slice(0, 10);
-    router.query.date = localISOTimeString;
+  const setDatesParam = (dates: DateRangePickerValue) => {
+    const dateQueries = dates.map((date) => UTCToLocal(date)?.toISOString().slice(0, 10));
+    const [localISOTimeStringSD, localISOTimeStringED] = dateQueries;
+    router.query.sd = localISOTimeStringSD;
+    router.query.ed = localISOTimeStringED;
     router.push(router);
   };
 
   useEffect(() => {
     if (!router.isReady) return;
-    const dateFromPath = router.query.date
-      ? LocalToUTC(new Date(router.query.date as string))
+    const SDFromPath = router.query.sd
+      ? LocalToUTC(new Date(router.query.sd as string))
       : new Date();
-    dateFromPath.setHours(0, 0, 0, 0);
-    setTargetDate(dateFromPath);
+    const EDFromPath = router.query.ed
+      ? LocalToUTC(new Date(router.query.ed as string))
+      : new Date(SDFromPath.getTime() + 86400000);
+    SDFromPath?.setHours(0, 0, 0, 0);
+    EDFromPath?.setHours(0, 0, 0, 0);
+    setTargetDates([SDFromPath, EDFromPath]);
   }, [router.isReady, router.query]);
 
   return (
@@ -82,19 +92,17 @@ const Trail: React.FC<TrailProps> = (props) => {
             </Button>
           )}
           {linkId && status !== 'loading' && <Title order={2}>{authorName} Trail</Title>}
-          <DatePicker
+
+          <DateRangePicker
             placeholder="Pick date"
             required
             size="xs"
             px={0}
-            value={targetDate}
-            onChange={setDateParam}
+            value={targetDates}
+            onChange={setDatesParam}
             clearable={false}
             dayStyle={(date) =>
-              date.toDateString() === new Date().toDateString() &&
-              date.toDateString() !== targetDate?.toDateString()
-                ? { color: '#228be6' }
-                : {}
+              date.toDateString() === new Date().toDateString() ? { color: '#228be6' } : {}
             }
           />
         </Group>

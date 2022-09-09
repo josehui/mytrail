@@ -26,12 +26,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'GET') {
     const authorEmail = linkAuthor?.email ? linkAuthor.email : session?.user?.email;
-    const startD = req.query.date ? new Date(req.query.date.toString()) : new Date();
-    if (!req.query.date) {
+    const startD = req.query.sd ? new Date(req.query.sd.toString()) : new Date();
+    if (!req.query.sd) {
       startD.setHours(0, 0, 0, 0);
     }
-    const endD = new Date(startD.getTime());
-    endD.setDate(endD.getDate() + 1);
+    const endD = req.query.ed
+      ? new Date(req.query.ed.toString())
+      : new Date(startD.getTime() + 86400000);
     let footprints = await prisma.footprint.findMany({
       orderBy: [
         {
