@@ -11,12 +11,33 @@ services:
     volumes:
       - mytrail-db:/var/lib/postgresql/data
   app:
+    # private image with env in build
     image: mytrail:test
     restart: always
-    environment:
-      - DATABASE_URL=postgresql://mytrail:mytrail@db:5432/mytrail?schema=public
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+  nginx:
+    image: nginx:alpine
+    restart: always
     ports:
-      - '3000:3000'
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/conf/:/etc/nginx/conf.d/:ro
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+  certbot-cloudflare:
+    image: certbot/dns-cloudflare
+    # Dry Run
+    # command: certonly --non-interactive --dns-cloudflare --dns-cloudflare-credentials /opt/cloudflare/credentials --agree-tos -d mytrail.live --dry-run
+    # Issue certificate
+    command: certonly --non-interactive --dns-cloudflare --dns-cloudflare-credentials /opt/cloudflare/credentials --agree-tos --email admin@mytrail.live -d mytrail.live -d *.mytrail.live
+    # Renew certificate
+    # command: renew --non-interactive --no-self-upgrade --dns-cloudflare --dns-cloudflare-credentials /opt/cloudflare/credentials --email admin@mytrail.live --agree-tos
+    volumes:
+      - ./cloudflare:/opt/cloudflare:ro
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
 volumes:
   mytrail-db:
     driver: local

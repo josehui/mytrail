@@ -38,3 +38,7 @@ gmap.config.js
 
 # storybook
 storybook-static
+
+# cert related
+cloudflare/
+certbot/

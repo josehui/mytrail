@@ -10,7 +10,6 @@ import prisma from '../../../lib/prisma';
 
 const createUserSetting = async (user: User) => {
   if (user) {
-    console.log(user.id);
     const currentSettings = await prisma.userSettings.findUnique({
       where: {
         userId: user.id,
@@ -56,7 +55,6 @@ const options = {
     }),
   ],
   adapter: PrismaAdapter(prisma),
-  secret: process.env.JWT_SECRET,
   theme: {
     colorScheme: 'dark',
   },
