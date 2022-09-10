@@ -11,9 +11,7 @@ export const JwtAuthMiddleware = async (req: NextApiRequest) => {
   }
   try {
     const bearerToken = req.headers.authorization.split(' ')[1];
-    console.log({ bearerToken });
     const decodedPayload = jwt.verify(bearerToken, JWT_SECRET);
-    console.log(decodedPayload);
     return decodedPayload;
   } catch (error) {
     const invalidTokenError = new Error('Invalid Auth Token');

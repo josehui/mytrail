@@ -28,9 +28,6 @@ const securityHeaders = [
 ];
 
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   async headers() {
     return [
       {
@@ -40,25 +37,25 @@ const nextConfig = {
       },
     ];
   },
+  output: 'standalone',
 };
 
 module.exports = withPlugins(
   [
-    withPWA,
-    {
-      dest: 'public',
-      register: true,
-      skipWaiting: true,
-    },
-  ],
-  [
-    withBundleAnalyzer,
-    {
-      reactStrictMode: false,
-      eslint: {
-        ignoreDuringBuilds: true,
+    [
+      withPWA,
+      {
+        dest: 'public',
+        register: true,
+        skipWaiting: true,
       },
-    },
+    ],
+    [
+      withBundleAnalyzer,
+      {
+        reactStrictMode: false,
+      },
+    ],
   ],
   nextConfig
 );

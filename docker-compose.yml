@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=mytrail
+      - POSTGRES_PASSWORD=mytrail
+    ports:
+      - '5432:5432'
+    volumes:
+      - mytrail-db:/var/lib/postgresql/data
+  app:
+    image: mytrail:test
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://mytrail:mytrail@db:5432/mytrail?schema=public
+    ports:
+      - '3000:3000'
+volumes:
+  mytrail-db:
+    driver: local

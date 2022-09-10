@@ -1,6 +1,6 @@
 # Install dependencies only when needed
-FROM node:16-alpine AS deps
-RUN apk add --no-cache libc6-compat
+FROM node:16-slim AS deps
+# RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
@@ -10,18 +10,20 @@ RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; fi
 
 
 # Rebuild the source code only when needed
-FROM node:16-alpine AS builder
+FROM node:16-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN apt-get update && apt-get -y install openssl
+RUN npx prisma generate
 RUN yarn build
 
 
 
 # Production image, copy all the files and run next
-FROM node:16-alpine AS runner
+FROM node:16-slim AS runner
 WORKDIR /app
-
+RUN apt-get update && apt-get -y install openssl
 ENV NODE_ENV production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
