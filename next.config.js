@@ -51,11 +51,14 @@ module.exports = withPlugins(
       skipWaiting: true,
     },
   ],
-  // [
-  //   withBundleAnalyzer,
-  //   {
-  //     reactStrictMode: false,
-  //   },
-  // ],
+  [
+    withBundleAnalyzer,
+    {
+      reactStrictMode: false,
+      eslint: {
+        ignoreDuringBuilds: true,
+      },
+    },
+  ],
   nextConfig
 );

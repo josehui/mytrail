@@ -68,7 +68,6 @@ const NotificationSetting = () => {
         });
         setSubscription(sub);
         setIsSubscribed(true);
-        console.log('web push subscribed!');
       } catch (error) {
         showNotification({
           id: 'subscribe-error',
@@ -78,7 +77,6 @@ const NotificationSetting = () => {
           color: 'red',
           loading: false,
         });
-        console.error(error);
       }
       setIsSubscribing(false);
       return;

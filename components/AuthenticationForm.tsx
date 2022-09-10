@@ -60,7 +60,6 @@ const AuthenticationForm = ({ csrfToken, providers, signIn }) => {
         loading: false,
       });
     } catch (error) {
-      console.error(error);
       showNotification({
         id: 'email-error',
         autoClose: 5000,
@@ -106,7 +105,6 @@ const AuthenticationForm = ({ csrfToken, providers, signIn }) => {
 
         <form
           onSubmit={form.onSubmit(async (values) => {
-            console.log(values);
             submitEmail(values);
           })}
         >

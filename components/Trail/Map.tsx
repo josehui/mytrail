@@ -82,7 +82,6 @@ const Map = (props: mapProps) => {
 
   useEffect(() => {
     if (targetId) {
-      console.log('scrolling');
       setTimeout(() => {
         window.location.href = targetId;
       }, 10);

@@ -13,7 +13,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         user: { email: session?.user?.email },
       },
     });
-    console.log({ subscriptionList });
     try {
       // const picked = (({ endpoint, expirationTime, keys }) => ({ endpoint, expirationTime, keys }))(
       //   subscriptionList[0]

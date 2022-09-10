@@ -40,7 +40,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         // compare last notification/ footprint with configured reminderFreq
         if (lastTimestamp < new Date(Date.now()).getTime() - 1000 * 60 * freq) {
           lastFootprintList[i].author?.pushNotification.forEach(async (subData) => {
-            console.log({ subData });
             const subscription = (({ endpoint, expirationTime, keys }) => ({
               endpoint,
               expirationTime,

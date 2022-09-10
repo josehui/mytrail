@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Text, Group, useMantineTheme, Image, SimpleGrid } from '@mantine/core';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
+import { showNotification } from '@mantine/notifications';
 import { IconUpload, IconX, IconCameraPlus } from '@tabler/icons';
 
 interface ImageProps {
@@ -30,7 +31,16 @@ const ImageUpload = (props: ImageProps) => {
           setFiles(blobs);
           setImages(blobs);
         }}
-        onReject={(blobs) => console.log('rejected files', blobs)}
+        onReject={() =>
+          showNotification({
+            id: 'files-error',
+            autoClose: 5000,
+            title: 'File types not supported',
+            message: 'Please only select image files',
+            color: 'red',
+            loading: false,
+          })
+        }
         maxSize={20 * 1024 ** 2}
         accept={{
           'image/*': [],
