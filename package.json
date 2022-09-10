@@ -1,6 +1,6 @@
 {
-  "name": "mantine-next-template",
-  "version": "1.0.0",
+  "name": "mytrail",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -66,6 +66,7 @@
     "@testing-library/user-event": "^14.0.4",
     "@types/formidable": "^2.0.5",
     "@types/jest": "^27.4.1",
+    "@types/jsonwebtoken": "^8.5.9",
     "@types/node": "^18.0.6",
     "@types/react": "18.0.16",
     "@types/web-push": "^3.3.2",

@@ -24,9 +24,8 @@ const PhotoCarousel = ({
     ]}
   >
     {images.map((photo, idx) => (
-      <Carousel.Slide>
+      <Carousel.Slide key={`ca-${idx}`}>
         <Image
-          key={idx}
           src={photo}
           height={500}
           fit="contain"

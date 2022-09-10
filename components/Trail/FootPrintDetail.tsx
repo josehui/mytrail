@@ -109,9 +109,8 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
           >
             <Grid>
               {images.map((image, idx) => (
-                <Grid.Col sm={12} md={6} lg={4}>
+                <Grid.Col sm={12} md={6} lg={4} key={`g-${idx}`}>
                   <Image
-                    key={idx}
                     src={image}
                     fit="contain"
                     sx={{ maxWidth: '100%', cursor: 'pointer', ':hover': { opacity: 0.8 } }}
@@ -144,7 +143,7 @@ const FootPrintDetail = (props: FootPrintDetailProps) => {
           <Group position="left">
             {images.map((image, idx) => (
               <Image
-                key={idx}
+                key={`i-${idx}`}
                 src={image}
                 sx={{ maxWidth: '21%', cursor: 'pointer', ':hover': { opacity: 0.8 } }}
                 onClick={() => setOpenPhotos(true)}
