@@ -45,16 +45,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               expirationTime,
               keys: JSON.parse(JSON.stringify(keys)),
             }))(subData);
-
-            await wpClient.sendNotification(
-              subscription,
-              JSON.stringify({
-                title: 'TEST - push notification',
-                message: 'Your web push notification is here!',
-              })
-            );
+            try {
+              await wpClient.sendNotification(
+                subscription,
+                JSON.stringify({
+                  title: 'TEST - push notification',
+                  message: 'Your web push notification is here!',
+                })
+              );
+            } catch (error) {
+              console.error(error);
+              // Remove invalid subscription
+              await prisma.pushSubscription.delete({
+                where: {
+                  id: subData.id,
+                },
+              });
+            }
           });
-          // start async update
+          // push tasks to
           userUpdateTasks.push(
             prisma.user.update({
               where: {

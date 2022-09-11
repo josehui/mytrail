@@ -7,4 +7,5 @@ wpClient.setVapidDetails(
   process.env.WEB_PUSH_PRIVATE_KEY!
 );
 
+const createReminderTask = async (subscription: PushSubscription) => {};
 export default wpClient;
