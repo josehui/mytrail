@@ -38,6 +38,10 @@ Source for [mytrail.live](https://mytrail.live)
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
+- `npx prisma db push` - synchronize Prisma schema Postgres
+- `npx prisma migrate dev` - Generate and apply Prisma migration
+- `npx prisma migrate dev` - Generate Prisma client
+- `npx prisma studio` - Run prisma studio
 
 ## Stack
 
@@ -50,6 +54,7 @@ Source for [mytrail.live](https://mytrail.live)
 ## TO-DO
 
 - Import/ Export feature
+- Edit footprint (TBC)
 - Storybook
 - Full coverage with Jest
 - CICD
