@@ -2,7 +2,7 @@
 
 Source for [mytrail.live](https://mytrail.live)
 
-### Features
+## Features
 
 - PWA suppot (with next-pwa)
 - Web push notificaiton management
@@ -14,6 +14,15 @@ Source for [mytrail.live](https://mytrail.live)
 - Integration with Prisma/ Postgres
 - Nginx as reverse proxy
 - ESLint setup with [eslint-config-mantine](https://github.com/mantinedev/eslint-config-mantine)
+
+## Stack
+
+- Next.js
+- Mantine UI
+- Prisma
+- Nginx
+- Azure Blob (image upload)
+- Cloudflare (DNS/ CDN)
 
 ## Yarn/ NPM Scripts
 
@@ -43,13 +52,10 @@ Source for [mytrail.live](https://mytrail.live)
 - `npx prisma migrate dev` - Generate Prisma client
 - `npx prisma studio` - Run prisma studio
 
-## Stack
+## Pre-Deployment
 
-- Next.js
-- Mantine UI
-- Prisma
-- Nginx
-- Docker
+- Populate .env.template
+- Run fullstack locally with `docker-compose up db app nginx`
 
 ## TO-DO
 

@@ -1,12 +1,14 @@
+# Using slim image due to alpine bug on m1 mac
+# For other platforms, use node:16-alpine
+
 # Install dependencies only when needed
 FROM node:16-slim AS deps
-# RUN apk add --no-cache libc6-compat
+# RUN apk add --no-cache libc6-compat (For node:16-alpine)
 WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; fi
-
 
 
 # Rebuild the source code only when needed

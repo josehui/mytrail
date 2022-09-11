@@ -12,7 +12,10 @@ services:
       - mytrail-db:/var/lib/postgresql/data
   app:
     # private image with env in build
-    image: mytrail:test
+    image: mytrail:alpha
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     restart: always
     extra_hosts:
       - 'host.docker.internal:host-gateway'
