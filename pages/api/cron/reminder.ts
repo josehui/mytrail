@@ -4,6 +4,17 @@ import wpClient from '../../../lib/web-push';
 import { JwtAuthMiddleware } from '../../../middleware/jwt-handler';
 import { BaseErrorHandler } from '../../../middleware/error-handler';
 
+const reminderMessage = JSON.stringify({
+  title: 'Reminder - add your footprint',
+  message: "You haven't posted a footprint in a while!",
+  actions: [
+    {
+      action: 'Add',
+      title: 'Add Footprint',
+    },
+  ],
+});
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // TO-DO verify JWT, return if not valid
   try {
@@ -46,13 +57,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
               keys: JSON.parse(JSON.stringify(keys)),
             }))(subData);
             try {
-              await wpClient.sendNotification(
-                subscription,
-                JSON.stringify({
-                  title: 'TEST - push notification',
-                  message: 'Your web push notification is here!',
-                })
-              );
+              await wpClient.sendNotification(subscription, reminderMessage);
             } catch (error) {
               console.error(error);
               // Remove invalid subscription

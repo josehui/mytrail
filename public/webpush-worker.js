@@ -7,16 +7,12 @@
         body: data.message,
         icon: '/icons/icon-192x192.png',
         vibrate: [200, 100, 200, 100, 200, 100, 200],
-        actions: [
-          {
-            action: 'get',
-            title: 'Get now.',
-          },
-        ],
+        actions: data.actions || [],
       })
     );
   });
   self.addEventListener('notificationclick', function (event) {
+    console.log(event);
     event.notification.close();
     event.waitUntil(
       clients
@@ -33,16 +29,14 @@
                 client = clientList[i];
               }
             }
-
             return client.focus();
           }
-
+          if (event.action === 'Add') {
+            return clients.openWindow('/mytrail?fp=true');
+          }
           return clients.openWindow('/');
         })
     );
-  });
-  self.addEventListener('notificationclick', (event) => {
-    console.log(event);
   });
 
   self.addEventListener('pushsubscriptionchange', function (event) {
