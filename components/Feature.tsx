@@ -1,5 +1,5 @@
 import { createStyles, Text, SimpleGrid, Container, Center } from '@mantine/core';
-import { IconTruck, IconCertificate, IconCoin, TablerIcon } from '@tabler/icons';
+import { IconShare, IconUpload, IconCoin, TablerIcon } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
   feature: {
@@ -60,19 +60,22 @@ function Feature({ icon: Icon, title, description, className, ...others }: Featu
 
 const mockdata = [
   {
-    icon: IconTruck,
-    title: 'Free Worldwide shipping',
-    description: 'As electricity',
+    icon: IconShare,
+    title: 'One-click Share',
+    description: `Get shareable link with a single click.
+Save time needed for "reporting you are safe"`,
   },
   {
-    icon: IconCertificate,
-    title: 'Best Quality Product',
-    description: 'Slakoth’s',
+    icon: IconUpload,
+    title: 'On-demand Upload/ Reminder',
+    description: `You only upload your location/ receive reminder when you want to.
+We dont track anything in the background.`,
   },
   {
     icon: IconCoin,
-    title: 'Very Affordable Pricing',
-    description: 'Thought to',
+    title: 'Completely Free',
+    description: `Report me if you find a payment button.
+We also don't sell your data.`,
   },
 ];
 
@@ -82,7 +85,12 @@ const FeatureSection = () => {
   return (
     <Container mt={30} mb={30} size="lg">
       <Center>
-        <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]} spacing={50}>
+        <SimpleGrid
+          cols={3}
+          breakpoints={[{ maxWidth: 'sm', cols: 1 }]}
+          spacing={50}
+          sx={{ whiteSpace: 'pre-wrap' }}
+        >
           {items}
         </SimpleGrid>
       </Center>

@@ -102,17 +102,19 @@ const HeroSection = () => {
 
       <div className={classes.inner}>
         <Title className={classes.title}>
-          Automated AI{' '}
+          Travel{' '}
           <Text component="span" className={classes.highlight} inherit>
-            code reviews
+            trail
           </Text>{' '}
-          for any stack
+          tracker for everyone
         </Title>
 
         <Container p={0} size={600}>
           <Text size="lg" color="dimmed" className={classes.description}>
-            Build more reliable software with AI companion. AI is also trained to detect lazy
-            developers who do nothing and just complain on Twitter.
+            Track and share your travel trail. Automatically alert your family and friend when
+            needed.
+            <br />
+            No installation. No ads. No bullshit.
           </Text>
         </Container>
 
@@ -123,7 +125,7 @@ const HeroSection = () => {
             </Button> */}
             <Link href="/api/auth/signin" passHref>
               <Button radius="xl" className={classes.control} size="lg">
-                Sign up
+                Get started
               </Button>
             </Link>
           </div>

@@ -1,20 +1,21 @@
-# Mantine Next Template
+# Mytrail.live
 
-Get started with Mantine + Next with just a few button clicks.
-Click `Use this template` button at the header of repository or [follow this link](https://github.com/mantinedev/mantine-next-template/generate) and
-create new repository with `@mantine` packages. Note that you have to be logged in to GitHub to generate template.
+Source for [mytrail.live](https://mytrail.live)
 
-## Features
+### Features
 
-This template comes with several essential features:
-
-- Server side rendering setup for Mantine
-- Color scheme is stored in cookie to avoid color scheme mismatch after hydration
-- Storybook with color scheme toggle
-- Jest with react testing library
+- PWA suppot (with next-pwa)
+- Web push notificaiton management
+- SMTP email integration with nodemailer
+- Light/ Dark mode
+- SSR, CSR, SSG for different pages
+- Auth with Google, Facebook, Email
+- Shareable link generation
+- Integration with Prisma/ Postgres
+- Nginx as reverse proxy
 - ESLint setup with [eslint-config-mantine](https://github.com/mantinedev/eslint-config-mantine)
 
-## npm scripts
+## Yarn/ NPM Scripts
 
 ### Build and dev scripts
 
@@ -37,3 +38,20 @@ This template comes with several essential features:
 - `storybook` – starts storybook dev server
 - `storybook:build` – build production storybook bundle to `storybook-static`
 - `prettier:write` – formats all files with Prettier
+
+## Stack
+
+- Next.js
+- Mantine UI
+- Prisma
+- Nginx
+- Docker
+
+## TO-DO
+
+- Import/ Export feature
+- Storybook
+- Full coverage with Jest
+- CICD
+- Auto cert renewal
+- Deployment guide

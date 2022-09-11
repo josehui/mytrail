@@ -141,7 +141,9 @@ const UserMenu = ({ user }: UserProps) => {
         <Link href="/settings" passHref>
           <Menu.Item icon={<IconSettings size={14} stroke={1.5} />}>Account settings</Menu.Item>
         </Link>
-        <Menu.Item icon={<IconSwitchHorizontal size={14} stroke={1.5} />}>Change account</Menu.Item>
+        <Menu.Item disabled icon={<IconSwitchHorizontal size={14} stroke={1.5} />}>
+          Import/ Export (developing)
+        </Menu.Item>
         <Menu.Item icon={<IconLogout size={14} stroke={1.5} />} onClick={() => signOut()}>
           Logout
         </Menu.Item>

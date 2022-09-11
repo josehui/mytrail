@@ -6,7 +6,7 @@ import { BaseErrorHandler } from '../../../middleware/error-handler';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // await JwtAuthMiddleware(req);
+    await JwtAuthMiddleware(req);
     if (req.method === 'POST') {
       const lastFootprintList = await prisma.footprint.findMany({
         where: {},
