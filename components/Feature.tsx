@@ -60,6 +60,11 @@ function Feature({ icon: Icon, title, description, className, ...others }: Featu
 
 const mockdata = [
   {
+    icon: IconCoin,
+    title: 'Completely Free',
+    description: 'As long as we can cover our hosting fee',
+  },
+  {
     icon: IconShare,
     title: 'One-click Share',
     description: `Get shareable link with a single click.
@@ -67,15 +72,9 @@ Save time needed for "reporting you are safe"`,
   },
   {
     icon: IconUpload,
-    title: 'On-demand Upload/ Reminder',
-    description: `You only upload your location/ receive reminder when you want to.
+    title: 'On-demand Tracking',
+    description: `You only upload your location when you want to.
 We dont track anything in the background.`,
-  },
-  {
-    icon: IconCoin,
-    title: 'Completely Free',
-    description: `Report me if you find a payment button.
-We also don't sell your data.`,
   },
 ];
 

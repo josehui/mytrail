@@ -42,3 +42,6 @@ storybook-static
 # cert related
 cloudflare/
 certbot/
+
+# azure specific
+nginx/conf/on-aca.conf
