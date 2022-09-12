@@ -111,7 +111,7 @@ const HeroSection = () => {
 
         <Container p={0} size={600}>
           <Text size="lg" color="dimmed" className={classes.description}>
-            Track and share your travel trail. Automatically alert your family and friend when
+            Track and share your travel trail. Automatically alert your family and friends when
             needed.
             <br />
             No installation. No ads. No bullshit.

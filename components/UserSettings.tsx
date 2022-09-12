@@ -115,7 +115,7 @@ const UserSettings = (props: settingFormProps) => {
         <Container size="sm">
           <NumberInput
             label="Time before SOS (in hours)"
-            description="From 12 to 120 hours. A SOS message will be sent if no new footprint recevied for the configured time"
+            description="From 12 to 120 hours. A SOS email will be sent if no new footprint recevied for the configured time"
             placeholder=""
             mt="md"
             max={120}
@@ -125,11 +125,10 @@ const UserSettings = (props: settingFormProps) => {
           />
           <Textarea
             mt="md"
-            label="SOS Email List"
+            label="SOS Email Recipient List"
             placeholder="someoneyoutrust@gmail.com, someoneyoulove@gmail.com"
-            required
             autosize
-            description="Separate each email by a comma (,) "
+            description="Separate each email by a comma (,). Leave blank if you dont want SOS emails to be sent."
             {...form.getInputProps('emailList')}
           />
           <Textarea
