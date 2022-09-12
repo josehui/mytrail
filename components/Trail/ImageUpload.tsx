@@ -3,11 +3,28 @@ import { Text, Group, useMantineTheme, Image, SimpleGrid } from '@mantine/core';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
 import { showNotification } from '@mantine/notifications';
 import { IconUpload, IconX, IconCameraPlus } from '@tabler/icons';
+import Resizer from 'react-image-file-resizer';
 
 interface ImageProps {
   dropZoneProps?: Partial<DropzoneProps>;
   setImages: (files: File[]) => void;
 }
+
+const resizeImage = (file: File) =>
+  new Promise((resolve) => {
+    Resizer.imageFileResizer(
+      file,
+      700,
+      700,
+      'png',
+      100,
+      0,
+      (uri) => {
+        resolve(uri);
+      },
+      'file'
+    );
+  });
 
 const ImageUpload = (props: ImageProps) => {
   const { setImages } = props;
@@ -27,9 +44,12 @@ const ImageUpload = (props: ImageProps) => {
   return (
     <>
       <Dropzone
-        onDrop={(blobs) => {
-          setFiles(blobs);
-          setImages(blobs);
+        onDrop={async (blobs) => {
+          const resizeTasks = blobs.map((blob) => resizeImage(blob));
+          const resizedBlobs = await Promise.all(resizeTasks);
+          console.log('done');
+          setImages(resizedBlobs as File[]);
+          setFiles(resizedBlobs as File[]);
         }}
         onReject={() =>
           showNotification({

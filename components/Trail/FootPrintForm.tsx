@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Text, TextInput, Button, Group, Box, Textarea, Loader } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
+import { showNotification, updateNotification } from '@mantine/notifications';
 import { useSWRConfig } from 'swr';
 import { useForm } from '@mantine/form';
-import { IconClock, IconMapPin, IconMapSearch } from '@tabler/icons';
+import { IconClock, IconMapPin, IconMapSearch, IconCheck } from '@tabler/icons';
 import ImageUpload from './ImageUpload';
 import { handleFetchError } from '../../lib/error-handling';
 import { settingsContext } from '../Context/Context';
@@ -100,7 +100,17 @@ const FootPrintForm = (props: FormProps) => {
   }, [currentLocation]);
 
   const submitData = async (formData: FormDataProps) => {
+    showNotification({
+      loading: true,
+      id: 'post-fp',
+      disallowClose: true,
+      title: 'Footprint uploading',
+      message: '',
+      autoClose: false,
+      color: 'blue',
+    });
     const filesFormData = new FormData();
+    console.log({ images });
     images?.forEach((file, idx) => filesFormData.append(idx.toString(), file));
     if (images) {
       try {
@@ -125,24 +135,24 @@ const FootPrintForm = (props: FormProps) => {
         body: JSON.stringify(body),
       });
       await handleFetchError(res, 'Error creating footprint');
-      showNotification({
-        id: 'post-fp-success',
-        autoClose: 5000,
-        title: 'Footprint added',
+      updateNotification({
+        id: 'post-fp',
+        color: 'teal',
+        title: 'Footprint uploaded',
         message: '',
-        color: 'green',
-        loading: false,
+        icon: <IconCheck size={16} />,
+        autoClose: 3000,
       });
       mutate(['/api/footprint', queryParams]);
     } catch (error) {
       console.error(error);
-      showNotification({
-        id: 'post-fp-error',
-        autoClose: 5000,
+      updateNotification({
+        id: 'post-fp',
+        color: 'tred',
         title: 'Error adding footprint',
         message: 'Please check input format',
-        color: 'red',
-        loading: false,
+        icon: <IconCheck size={16} />,
+        autoClose: 3000,
       });
     }
   };

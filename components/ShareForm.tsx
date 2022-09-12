@@ -73,8 +73,8 @@ export default function ShareForm() {
     }
   };
 
-  const items = links?.map((item) => (
-    <Group align="stretch">
+  const items = links?.map((item, idx) => (
+    <Group align="stretch" spacing={0} key={idx}>
       <CopyButton value={`${hostname}/l/${item.id}`}>
         {({ copied, copy }) => (
           <Box<'a'>
