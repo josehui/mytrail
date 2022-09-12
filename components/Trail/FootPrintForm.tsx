@@ -33,7 +33,7 @@ const FootPrintForm = (props: FormProps) => {
     initialValues: {
       location: '',
       address: '',
-      remarks: userSettings?.defaultMessage || 'I am fine, thanks"',
+      remarks: userSettings?.defaultMessage || 'I am fine, thanks',
       timestamp: new Date().toISOString(),
       images: [],
     },

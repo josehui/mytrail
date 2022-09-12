@@ -1,29 +1,12 @@
 // pages/api/auth/[...nextauth].ts
 
 import { NextApiHandler } from 'next';
-import NextAuth, { User } from 'next-auth';
+import NextAuth from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import EmailProvider from 'next-auth/providers/email';
 import FacebookProvider from 'next-auth/providers/facebook';
 import prisma from '../../../lib/prisma';
-
-const createUserSetting = async (user: User) => {
-  if (user) {
-    const currentSettings = await prisma.userSettings.findUnique({
-      where: {
-        userId: user.id,
-      },
-    });
-    if (!currentSettings) {
-      await prisma.userSettings.create({
-        data: {
-          user: { connect: { id: user.id } },
-        },
-      });
-    }
-  }
-};
 
 const options = {
   providers: [
@@ -57,13 +40,6 @@ const options = {
   adapter: PrismaAdapter(prisma),
   theme: {
     colorScheme: 'dark',
-  },
-  callbacks: {
-    // @ts-ignore
-    async signIn({ user }) {
-      createUserSetting(user);
-      return true;
-    },
   },
   pages: {
     signIn: '/auth/signin',

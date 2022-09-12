@@ -18,11 +18,18 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     res.statusCode = 403;
     return { props: { settings: null, auth: false } };
   }
-  const settings = await prisma.userSettings.findFirst({
+  let settings = await prisma.userSettings.findFirst({
     where: {
       user: { email: session?.user?.email },
     },
   });
+  if (!settings) {
+    settings = await prisma.userSettings.create({
+      data: {
+        user: { connect: { email: session?.user?.email! } },
+      },
+    });
+  }
   return {
     props: { settings, auth: true },
   };
