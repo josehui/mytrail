@@ -59,8 +59,6 @@ Source for [mytrail.live](https://mytrail.live)
 
 ## TO-DO
 
-- Compress image before upload + better feedback
-- Fix link UI
 - Import/ Export feature
 - Edit footprint (TBC)
 - Storybook
