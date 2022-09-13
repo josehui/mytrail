@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         );
         const recipientList = lastFootprintList[i]?.author?.setting?.emailList;
         // convert to ms
-        if (lastTimestamp < new Date(Date.now()).getTime() - 36e1 * freq && recipientList?.length) {
+        if (lastTimestamp < new Date(Date.now()).getTime() - 36e5 * freq && recipientList?.length) {
           const recipents = recipientList.toString();
           const userName =
             // must have email but not name
