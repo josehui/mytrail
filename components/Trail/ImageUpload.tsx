@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Text, Group, useMantineTheme, Image, SimpleGrid } from '@mantine/core';
 import { Dropzone, DropzoneProps } from '@mantine/dropzone';
-import { showNotification } from '@mantine/notifications';
+import { showNotification, hideNotification } from '@mantine/notifications';
 import { IconUpload, IconX, IconCameraPlus } from '@tabler/icons';
 import Resizer from 'react-image-file-resizer';
 
 interface ImageProps {
   dropZoneProps?: Partial<DropzoneProps>;
   setImages: (files: File[]) => void;
+  setLoadingImages: (flag: boolean) => void;
 }
 
 const resizeImage = (file: File) =>
@@ -17,7 +18,7 @@ const resizeImage = (file: File) =>
       700,
       700,
       'png',
-      100,
+      80,
       0,
       (uri) => {
         resolve(uri);
@@ -27,7 +28,7 @@ const resizeImage = (file: File) =>
   });
 
 const ImageUpload = (props: ImageProps) => {
-  const { setImages } = props;
+  const { setImages, setLoadingImages } = props;
   const theme = useMantineTheme();
   const [files, setFiles] = useState<File[]>([]);
   const imagePreviews = files.map((file, index) => {
@@ -45,11 +46,22 @@ const ImageUpload = (props: ImageProps) => {
     <>
       <Dropzone
         onDrop={async (blobs) => {
+          setLoadingImages(true);
+          showNotification({
+            id: 'load-images',
+            autoClose: false,
+            title: 'Processing photos',
+            message: '',
+            color: 'blue',
+            loading: true,
+          });
           const resizeTasks = blobs.map((blob) => resizeImage(blob));
           const resizedBlobs = await Promise.all(resizeTasks);
           console.log('done');
           setImages(resizedBlobs as File[]);
           setFiles(resizedBlobs as File[]);
+          setLoadingImages(false);
+          hideNotification('load-images');
         }}
         onReject={() =>
           showNotification({

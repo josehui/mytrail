@@ -25,6 +25,7 @@ const FootPrintForm = (props: FormProps) => {
   const userSettings = useContext(settingsContext);
   const { setOpenForm, queryParams } = props;
   const [images, setImages] = useState<File[] | null>();
+  const [loadingImages, setLoadingImages] = useState<boolean>(false);
   const [loadingLocation, setLoadingLocation] = useState<boolean>(false);
   const [currentLocation, setCurrentLocation] = useState<GeolocationPosition | null>(null);
   const [isLocationEditable, setLocationEditable] = useState<boolean>(false);
@@ -205,10 +206,10 @@ const FootPrintForm = (props: FormProps) => {
           required
           {...form.getInputProps('remarks')}
         />
-        <ImageUpload setImages={setImages} />
+        <ImageUpload {...{ setImages, setLoadingImages }} />
 
         <Group position="right" mt="md">
-          <Button type="submit" disabled={loadingLocation}>
+          <Button type="submit" disabled={(loadingLocation || loadingImages) as boolean}>
             Submit
           </Button>
         </Group>
